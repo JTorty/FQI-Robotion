@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxygen&display=swap');
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Oxygen', 'Segoe UI', 'Roboto',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+#root {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.App {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(160.74deg, #1B1F79 7.8%, #5A0000 88.37%);
+  text-align: center;
+}
