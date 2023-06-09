@@ -2,3 +2,22 @@ div.avatar img {
     width: 70px;
     height: 70px;
 }
+
+.borderAvatar {
+    position: relative;
+    z-index: 100;
+    margin-top: -20px;
+    border: 2.5px solid #31BC00;
+    border-radius: 10px;
+    height: 21px;
+    width: 83px;
+    background-color: #E8E8E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.borderAvatar span {
+    color: #000;
+    font-size: x-small;
+}
