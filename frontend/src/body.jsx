@@ -1,6 +1,6 @@
 import './style/body.css';
-import Map from './components/map';
 import RobotProfile from './components/robotProfile';
+import Map from './components/map';
 
 function Body() {
   return (
@@ -10,12 +10,12 @@ function Body() {
         <RobotProfile color="turquoise"/>
         <RobotProfile color="black"/>
         <RobotProfile color="brown"/>
+        <Map />
         <RobotProfile color="yellow"/>
         <RobotProfile color="orange"/>
         <RobotProfile color="red"/>
         <RobotProfile color="pink"/>
         <RobotProfile color="blue"/>
-          <Map />
       </div>
   );
 }

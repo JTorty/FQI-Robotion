@@ -1,0 +1,13 @@
+#filters-button {
+    background-color: #3D43BD;
+    width: 104px;
+    height: 32px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+#checkbox {
+    background-color: transparent !important;
+    color: white !important;
+}
