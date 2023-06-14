@@ -6,6 +6,7 @@ footer {
   justify-content: space-evenly;
   font-size: calc(10px + 0.9vmin);
   color: white;
+  padding: 200px 0 50px;
 }
 
 .logo-icon {

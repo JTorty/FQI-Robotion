@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 function Body() {
   return (
     <div className="main">
-      <Stack spacing={5}> 
+      <Stack spacing={6}>
         <RobotProfile color="white" />
         <RobotProfile color="green" />
         <RobotProfile color="turquoise" />
@@ -15,7 +15,7 @@ function Body() {
         <RobotProfile color="brown" />
       </Stack>
       <Map />
-      <Stack spacing={5}>
+      <Stack spacing={6}>
         <RobotProfile color="yellow" />
         <RobotProfile color="orange" />
         <RobotProfile color="red" />
