@@ -29,9 +29,11 @@ export default function Filters() {
     
     const handleClick = () => {
         if (visible === "none") {
-            setVisible('block');
+            setVisible('flex');
+            document.getElementById("filters-button").style.boxShadow = '0px 3px 3px rgba(0, 0, 0, 0.25)';
         } else {
             setVisible('none');
+            document.getElementById("filters-button").style.boxShadow = null;
         }
     };
 
@@ -63,7 +65,7 @@ export default function Filters() {
                 >
                     Filters
                 </Button>
-                <List id="filters-list" sx={{display: `${visible}`, width: '100%', maxWidth: 360, bgcolor: '#3D43BD'}}>
+                <List id="filters-list" sx={{display: `${visible}`, width: 'auto', padding: '14px 30px', maxWidth: 480, bgcolor: '#3D43BD'}}>
                     {[0, 1, 2, 3].map((value) => {
                         const labelId = `checkbox-list-label-${value}`;
 
@@ -72,8 +74,11 @@ export default function Filters() {
                                 key={value}
                                 disablePadding
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                                    <ListItemIcon>
+                                <ListItemButton role={undefined} onClick={handleToggle(value)} disableRipple dense sx={{
+                                    '&:hover': {
+                                        backgroundColor: 'inherit',
+                                    }}}>
+                                    <ListItemIcon sx={{minWidth: 0}}>
                                         <WhiteCheckbox
                                             size="small"
                                             edge="start"
