@@ -1,6 +1,6 @@
 import psycopg2
 from robots import Robot
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -21,13 +21,18 @@ conn = psycopg2.connect(database="Robotion",
 
 cursor = conn.cursor()
 
-cursor.execute("SELECT * FROM robots")
+cursor.execute("SELECT id FROM robots WHERE id = 'AAA'")
+
+# print(cursor.execute("SELECT * FROM robots"))
+print(cursor.fetchall())
+
 
 
 @app.put("/updatestatus")
 async def update_status(serialNumber: str, newStatus: str):
-    update_query = f"UPDATE robots SET status={newStatus} WHERE id='{serialNumber}'"
-    select_query = f"SELECT id FROM robots WHERE id='{id}'"
+    print(serialNumber)
+    update_query = f"UPDATE robots SET status='{newStatus}' WHERE id='{serialNumber}'"
+    select_query = f"SELECT id FROM robots WHERE id='{serialNumber}'"
     
     if newStatus not in {'idle', 'online', 'offline'}:
         return {"error": "Status not valid"}
@@ -45,9 +50,9 @@ async def update_status(serialNumber: str, newStatus: str):
     return {"Success": "Robot status updated"}
 
 @app.put("/updatebattery")
-async def update_status(serialNumber: str, newBattery: int = Path(ge=0, le=100)):
+async def update_status(*, serialNumber: str, newBattery: int):
     update_query = f"UPDATE robots SET battery={int(newBattery)} WHERE id='{serialNumber}'"
-    select_query = f"SELECT id FROM robots WHERE id='{id}'"
+    select_query = f"SELECT id FROM robots WHERE id='{serialNumber}'"
 
     cursor = conn.cursor()
     cursor.execute(select_query)
