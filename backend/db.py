@@ -76,6 +76,7 @@ async def add_robot(serialNumber: str, status: str, battery: int, longitude: flo
     insert_query = "INSERT INTO robots (id, status, battery, latitude, longitude) VALUES (%s, %s, %s, %s, %s)"
     cursor = conn.cursor()
 
+    cursor.execute(count_query)
     if cursor.fetchone()[0] >= 10:
         return {"Error": "Robot limit reached"}
     
