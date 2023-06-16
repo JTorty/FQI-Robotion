@@ -93,7 +93,10 @@ async def get_all_robots():
     select_query = "SELECT * FROM robots;"
     
     cursor = conn.cursor()
-    cursor.execute(select_query)
+
+    cursor.execute(count_query)
+    if cursor.fetchone()[0] >= 10:
+        return {"Error": "Robot limit reached"}
     
     robots = cursor.fetchall()
     
