@@ -70,23 +70,24 @@ async def update_status(serialNumber: str, newBattery: int):
     cursor.close()
     return {"Success": "Robot battery updated"}
 
-# @app.post("/addrobot")
-# async def add_robot(serialNumber: str, status: str, battery: int, longitude: float, latitude: float):
-#     count_query = "SELECT COUNT(*) FROM robots"
-#     insert_query = "INSERT INTO robots (id, status, battery, latitude, longitude) VALUES (%s, %s, %s, %s, %s)"
-#     cursor = conn.cursor()
+@app.post("/addrobot")
+async def add_robot(serialNumber: str, status: str, battery: int, longitude: float, latitude: float):
+    count_query = "SELECT COUNT(*) FROM robots"
+    insert_query = "INSERT INTO robots (id, status, battery, latitude, longitude) VALUES (%s, %s, %s, %s, %s)"
+    cursor = conn.cursor()
+    cursor.execute(count_query)
 
-#     if cursor.fetchone()[0] >= 10:
-#         return {"Error": "Robot limit reached"}
+    if cursor.fetchone()[0] >= 10:
+        return {"Error": "Robot limit reached"}
     
-#     try:
-#         cursor.execute(insert_query, (serialNumber, status, battery, round(latitude, 6), round(longitude, 6)))
-#         conn.commit()
-#     except IntegrityError as err:
-#         print(err)
-#         return {"Error": "Primary key violation"}
+    try:
+        cursor.execute(insert_query, (serialNumber, status, battery, round(latitude, 6), round(longitude, 6)))
+        conn.commit()
+    except IntegrityError as err:
+        print(err)
+        return {"Error": "Primary key violation"}
     
-#     return {"Success": "Robot added"}
+    return {"Success": "Robot added"}
     
 @app.get("/getallrobots")
 async def get_all_robots():
