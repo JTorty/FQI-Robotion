@@ -110,15 +110,3 @@ async def get_all_robots():
         robot_list.append(robot_dict)
 
     return robot_list
-    
-
-    
-
-    
-
-    
-
-
-
-
-
