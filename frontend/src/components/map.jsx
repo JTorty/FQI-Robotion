@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 
 function Map() {
     return (
-        <Stack direction="column" spacing={3}>
+        <Stack direction="column" spacing={'1.5vw'}>
             <Legend />
             <img src={map} className="map" alt="map" />
             <Filters />

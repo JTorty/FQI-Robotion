@@ -4,9 +4,9 @@ import Stack from "@mui/material/Stack";
 
 function Legend() {
     return (
-        <div style={{paddingLeft: "40px"}}>
+        <div style={{paddingLeft: "3vw"}}>
             <div className="on-line"></div>
-            <Stack direction="row" spacing={7}>
+            <Stack direction="row" spacing={'3.85vw'}>
                 <Status type="operative" />
                 <Status type="idle" />
                 <Status type="offline" />

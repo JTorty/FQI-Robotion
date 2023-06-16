@@ -50,7 +50,7 @@ function RobotProfile(props) {
                 <img src={avatar} alt={props.color} />
             </div>
             <div className="borderAvatar">
-                <span>S/N 0000</span>
+                <span>{props.model}</span>
             </div>
         </div>
     );

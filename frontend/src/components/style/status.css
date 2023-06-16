@@ -1,9 +1,10 @@
 .dot {
-    width: 14px;
-    height: 14px;
+    width: 0.8vw;
+    height: 0.8vw;
     border-radius: 50%;
 }
 
 .text {
-    font-size: 14px;
+    font-size: 0.9vw;
+    margin-left: 0.9vw !important;
 }

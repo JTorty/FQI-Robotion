@@ -5,16 +5,17 @@ import Header from './header';
 import Body from './body';
 import Footer from './footer';
 import reportWebVitals from './reportWebVitals';
+import Container from "@mui/material/Container";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-      <div className="App">
-        <Header />
-        <Body />
-        <Footer />
-      </div>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Container maxWidth="false" className="App">
+            <Header/>
+            <Body/>
+            <Footer/>
+        </Container>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

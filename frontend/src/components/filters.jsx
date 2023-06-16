@@ -51,7 +51,7 @@ export default function Filters() {
     };
 
     return (
-        <div style={{paddingRight: "40px"}}>
+        <div style={{paddingRight: "3vw"}}>
             <Stack direction="row" justifyContent="flex-end">
                 <Button
                     id="filters-button"
@@ -65,7 +65,7 @@ export default function Filters() {
                 >
                     Filters
                 </Button>
-                <List id="filters-list" sx={{display: `${visible}`, width: 'auto', padding: '14px 30px', maxWidth: 480, bgcolor: '#3D43BD'}}>
+                <List id="filters-list" sx={{display: `${visible}`, width: 'auto', padding: '1.25vw 2.5vw', maxWidth: '30vw', bgcolor: '#3D43BD'}}>
                     {[0, 1, 2, 3].map((value) => {
                         const labelId = `checkbox-list-label-${value}`;
 
@@ -89,7 +89,7 @@ export default function Filters() {
                                         />
                                     </ListItemIcon>
                                     <ListItemText id={labelId} primary={labelName[value]} disableTypography
-                                                  sx={{color: '#fff', fontSize: '12px'}}/>
+                                                  sx={{color: '#fff', fontSize: '0.9vw'}}/>
                                 </ListItemButton>
                             </ListItem>
                         )

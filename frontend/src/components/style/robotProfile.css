@@ -1,16 +1,16 @@
 div.avatar img {
-    width: 82px;
-    height: 82px;
+    width: 5vw;
+    height: 5vw;
 }
 
 .borderAvatar {
     position: relative;
     z-index: 100;
-    margin-top: -20px;
-    border: 2.5px solid #31BC00;
-    border-radius: 10px;
-    height: 21px;
-    width: 83px;
+    margin-top: -1.45vw;
+    border: 0.25vw solid #31BC00;
+    border-radius: 10vw;
+    height: 1.3vw;
+    width: 5vw;
     background-color: #E8E8E8;
     display: flex;
     justify-content: center;
@@ -19,5 +19,5 @@ div.avatar img {
 
 .borderAvatar span {
     color: #000;
-    font-size: x-small;
+    font-size: 0.7vw;
 }
