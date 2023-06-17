@@ -51,7 +51,7 @@ async def update_status(serialNumber: str, newStatus: str):
 
 @app.put("/updateposition")
 async def update_position(serialNumber: str, newLatitude: float, newLongitude: float):
-    update_query = f"UPDATE robots SET latitude={round(newLatitude, 6)}, longitude={round(newLongitude, 6)} WHERE id='{serialNumber}'"
+    update_query = f"UPDATE robots SET latitude={newLatitude}, longitude={newLongitude} WHERE id='{serialNumber}'"
     select_query = f"SELECT id FROM robots WHERE id='{serialNumber}'"
     cursor = conn.cursor()
     cursor.execute(select_query)
@@ -108,11 +108,10 @@ async def get_all_robots():
     cursor = conn.cursor()
     cursor.execute(select_query)
     robots = cursor.fetchall()
-    
-    cursor.close()
+    print(robots)
     robot_list = []
     for robot in robots:
-        lon, lat = Geo_Coordinate.from_dd_to_dms(robot[4], robot[3])
+        lon, lat = Geo_Coordinate.from_dd_to_dms(float(robot[4]), float(robot[3]))
         robot_dict = {
             "model": robot[0],
             "status": robot[1],
@@ -136,3 +135,16 @@ async def get_all_robots():
         robot_list.append(robot_dict)
 
     return robot_list
+
+@app.delete("/deleterobot/{serialNumber}")
+async def delete_robot(serialNumber: str):
+    delete_query = f"DELETE FROM robots WHERE id='{serialNumber}'"
+    select_query = f"SELECT id FROM robots WHERE id='{serialNumber}'"
+    cursor = conn.cursor()
+    cursor.execute(select_query)
+    if not cursor.fetchone():
+        return {"Error": "No such robot"}
+    cursor.execute(delete_query)
+    conn.commit()
+    cursor.close()
+    return {"Success": "Robot deleted"}
