@@ -1,10 +1,10 @@
 #filters-button {
     background-color: #3D43BD;
-    width: 138px;
-    height: 42px;
-    border-radius: 6px;
+    width: 8.8vw;
+    height: 2.5vw;
+    border-radius: 1.5vw;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 0.9vw;
     cursor: pointer;
     position: absolute;
     z-index: 99;
@@ -12,7 +12,8 @@
 
 #filters-list {
     opacity: 0.9;
-    margin: 36px -10px 0 0;
-    border-radius: 4px;
+    margin: 2vw -0.8vw 0 0;
+    padding: 0.8vw 1.4vw;
+    border-radius: 1vw;
     position: absolute;
 }
