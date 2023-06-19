@@ -1,7 +1,8 @@
 from robots import Robot, robot1, robot2, robot3, robot4, robot5
 from coordinates import Geo_Coordinate
 from obstacles import Obstacle, obstacle1, obstacle2, obstacle3
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point
+import shapely.affinity
 import matplotlib.pyplot as plt
 import random
 import math
@@ -54,12 +55,6 @@ def is_position_valid(serial_number: str, new_coordinate: Geo_Coordinate) -> boo
     return True
 
 
-for robot in (robot1, robot2, robot3, robot4, robot5):
-    add_robot(robot)
-for obstacle in (obstacle1, obstacle2, obstacle3):
-    add_obstacle(obstacle)
-
-
 def draw_space():
     _, ax = plt.subplots()
     ax.set_aspect('equal')
@@ -88,13 +83,6 @@ def draw_space():
     plt.show()
 
 
-set_travel_space(
-    Geo_Coordinate((2, 10, 26.0), (41, 24, 15.0), decimal=False),
-    Geo_Coordinate((2, 10, 31.0), (41, 24, 15.0), decimal=False),
-    Geo_Coordinate((2, 10, 31.0), (41, 24, 18.0), decimal=False),
-    Geo_Coordinate((2, 10, 26.0), (41, 24, 18.0), decimal=False)
-)
-
 def move_robot(robot: Robot, distance: float):
     current_position = robot.coordinate.get_dec_coord()
     angle = random.uniform(0, 360)  # angolo random in gradi
@@ -118,9 +106,81 @@ def move_robot(robot: Robot, distance: float):
     # update della posizione del robot
     robot.update_position(new_lon, new_lat)
 
-distance = 0.00006
 
-move_robot(robot3, distance)
+set_travel_space(
+    Geo_Coordinate(41.404056, 2.173778, decimal=True),
+    Geo_Coordinate(41.404151, 2.173778, decimal=True),
+    Geo_Coordinate(41.404151, 2.173838, decimal=True),
+    Geo_Coordinate(41.404056, 2.173838, decimal=True)
+)
+
+#colonna in alto a sinistra
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404073, 2.173820, decimal=True),
+        Geo_Coordinate(41.404077, 2.173820, decimal=True),
+        Geo_Coordinate(41.404077, 2.173824, decimal=True),
+        Geo_Coordinate(41.404073, 2.173824, decimal=True)
+    )
+)
+
+#colonna in alto a destra
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404130, 2.173820, decimal=True),
+        Geo_Coordinate(41.404134, 2.173820, decimal=True),
+        Geo_Coordinate(41.404134, 2.173824, decimal=True),
+        Geo_Coordinate(41.404130, 2.173824, decimal=True)
+    )
+)
+
+#colonna in basso a sinistra
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404073, 2.173788, decimal=True),
+        Geo_Coordinate(41.404077, 2.173788, decimal=True),
+        Geo_Coordinate(41.404077, 2.173792, decimal=True),
+        Geo_Coordinate(41.404073, 2.173792, decimal=True)
+    )
+)
+
+#colonna in basso a destra
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404130, 2.173788, decimal=True),
+        Geo_Coordinate(41.404134, 2.173788, decimal=True),
+        Geo_Coordinate(41.404134, 2.173792, decimal=True),
+        Geo_Coordinate(41.404130, 2.173792, decimal=True)
+    )
+)
+
+#scrivania in alto a destra
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404143, 2.173824, decimal=True),
+        Geo_Coordinate(41.404151, 2.173824, decimal=True),
+        Geo_Coordinate(41.404151, 2.173838, decimal=True),
+        Geo_Coordinate(41.404143, 2.173838, decimal=True)
+    )
+)
+
+#pedana di monitoraggio
+add_obstacle(
+    Obstacle
+    (
+        Geo_Coordinate(41.404091, 2.173831, decimal=True),
+        Geo_Coordinate(41.4041035, 2.173827, decimal=True),
+        Geo_Coordinate(41.404116, 2.173831, decimal=True),
+        Geo_Coordinate(41.404116, 2.173838, decimal=True),
+        Geo_Coordinate(41.404091, 2.173838, decimal=True)
+    )
+)
+
 
 draw_space()
 
