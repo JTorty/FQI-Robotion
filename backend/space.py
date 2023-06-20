@@ -174,7 +174,9 @@ add_obstacle(
     Obstacle
     (
         Geo_Coordinate(41.404091, 2.173831, decimal=True),
-        Geo_Coordinate(41.4041035, 2.173827, decimal=True),
+        Geo_Coordinate(41.404098, 2.173827, decimal=True),
+        Geo_Coordinate(41.404103, 2.173827, decimal=True),
+        Geo_Coordinate(41.404108, 2.173827, decimal=True),
         Geo_Coordinate(41.404116, 2.173831, decimal=True),
         Geo_Coordinate(41.404116, 2.173838, decimal=True),
         Geo_Coordinate(41.404091, 2.173838, decimal=True)
