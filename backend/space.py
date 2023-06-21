@@ -8,7 +8,7 @@ import random
 import math
 
 robots: dict[str, Robot] = {}
-obstacles: list[Obstacle] = []
+obstacles: list[Polygon] = []
 travel_space: Polygon = None
 
 
@@ -40,18 +40,17 @@ def is_robot_valid(serial_number: str) -> bool:
     return True
 
 
-def is_position_valid(serial_number: str, new_coordinate: Geo_Coordinate) -> bool:
+def is_position_valid(new_coordinate: Geo_Coordinate) -> bool:
     """Return true if this coordinate would be a valid position for this robot"""
-    shape = new_coordinate.get_point().buffer(
-        robots[serial_number].get_radius())
+    shape = new_coordinate.get_point()
     if not travel_space.covers(shape):
         return False
     for obstacle in obstacles:
         if obstacle.is_colliding(shape):
             return False
-    for other_robot in robots.values():
-        if (other_robot.serial_number != serial_number) and (other_robot.is_colliding(shape)):
-            return False
+    # for other_robot in robots.values():
+    #     if (other_robot.serial_number != serial_number) and (other_robot.is_colliding(shape)):
+    #         return False
     return True
 
 
@@ -78,34 +77,32 @@ def draw_space():
 
     # draw obstacles
     for obstacle in obstacles:
-        ax.fill(*obstacle.get_polygon().exterior.xy,
+        ax.fill(*obstacle.exterior.xy,
                 alpha=0.3, edgecolor='none', color='red')
     plt.show()
 
-
-def move_robot(robot: Robot, distance: float):
-    current_position = robot.coordinate.get_dec_coord()
-    angle = random.uniform(0, 360)  # angolo random in gradi
-    angle_radians = math.radians(angle)  # conversione in radianti
-    delta_lon = distance * math.cos(angle_radians)  # calcolo del cambio della long
-    delta_lat = distance * math.sin(angle_radians)  # calcolo del cambio della lat
+def move_robot(robot_coordinate):
+    distance = 0.000006
+    current_position = robot_coordinate
+    angle = random.uniform(0, 360)  # random angle in degrees
+    angle_radians = math.radians(angle)  # conversion to radians
+    delta_lon = distance * math.cos(angle_radians)  # change in longitude
+    delta_lat = distance * math.sin(angle_radians)  # change in latitude
     new_lon = current_position[0] + delta_lon
     new_lat = current_position[1] + delta_lat
-    new_coordinate = Geo_Coordinate(new_lon, new_lat)
+    new_coordinate = (new_lon, new_lat)
     
-    while not is_position_valid(robot.serial_number, new_coordinate):
-        # check della posizione, se non è utilizzabile ci sta il ricalcolo
+    while not is_position_valid(new_coordinate):
+        # check the position; if not valid, recalculate
         angle = random.uniform(0, 360)
         angle_radians = math.radians(angle)
         delta_lon = distance * math.cos(angle_radians)
         delta_lat = distance * math.sin(angle_radians)
         new_lon = current_position[0] + delta_lon
         new_lat = current_position[1] + delta_lat
-        new_coordinate = Geo_Coordinate(new_lon, new_lat)
+        new_coordinate = (new_lon, new_lat)
     
-    # update della posizione del robot
-    robot.update_position(new_lon, new_lat)
-
+    return new_coordinate
 
 set_travel_space(
     Geo_Coordinate(41.404056, 2.173778, decimal=True),
@@ -115,75 +112,72 @@ set_travel_space(
 )
 
 #colonna in alto a sinistra
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404073, 2.173820, decimal=True),
-        Geo_Coordinate(41.404077, 2.173820, decimal=True),
-        Geo_Coordinate(41.404077, 2.173824, decimal=True),
-        Geo_Coordinate(41.404073, 2.173824, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404073, 2.173820),
+        (41.404077, 2.173820),
+        (41.404077, 2.173824),
+        (41.404073, 2.173824)
+    ))
 )
 
 #colonna in alto a destra
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404130, 2.173820, decimal=True),
-        Geo_Coordinate(41.404134, 2.173820, decimal=True),
-        Geo_Coordinate(41.404134, 2.173824, decimal=True),
-        Geo_Coordinate(41.404130, 2.173824, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404130, 2.173820),
+        (41.404134, 2.173820),
+        (41.404134, 2.173824),
+        (41.404130, 2.173824)
+    ))
 )
 
 #colonna in basso a sinistra
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404073, 2.173788, decimal=True),
-        Geo_Coordinate(41.404077, 2.173788, decimal=True),
-        Geo_Coordinate(41.404077, 2.173792, decimal=True),
-        Geo_Coordinate(41.404073, 2.173792, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404073, 2.173788),
+        (41.404077, 2.173788),
+        (41.404077, 2.173792),
+        (41.404073, 2.173792)
+    ))
 )
 
 #colonna in basso a destra
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404130, 2.173788, decimal=True),
-        Geo_Coordinate(41.404134, 2.173788, decimal=True),
-        Geo_Coordinate(41.404134, 2.173792, decimal=True),
-        Geo_Coordinate(41.404130, 2.173792, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404130, 2.173788),
+        (41.404134, 2.173788),
+        (41.404134, 2.173792),
+        (41.404130, 2.173792)
+    ))
 )
 
 #scrivania in alto a destra
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404143, 2.173824, decimal=True),
-        Geo_Coordinate(41.404151, 2.173824, decimal=True),
-        Geo_Coordinate(41.404151, 2.173838, decimal=True),
-        Geo_Coordinate(41.404143, 2.173838, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404143, 2.173824),
+        (41.404151, 2.173824),
+        (41.404151, 2.173838),
+        (41.404143, 2.173838)
+    ))
 )
 
 #pedana di monitoraggio
-add_obstacle(
-    Obstacle
-    (
-        Geo_Coordinate(41.404091, 2.173831, decimal=True),
-        Geo_Coordinate(41.404098, 2.173827, decimal=True),
-        Geo_Coordinate(41.404103, 2.173827, decimal=True),
-        Geo_Coordinate(41.404108, 2.173827, decimal=True),
-        Geo_Coordinate(41.404116, 2.173831, decimal=True),
-        Geo_Coordinate(41.404116, 2.173838, decimal=True),
-        Geo_Coordinate(41.404091, 2.173838, decimal=True)
-    )
+obstacles.append(
+    Polygon
+    ((
+        (41.404091, 2.173831),
+        (41.404098, 2.173827),
+        (41.404103, 2.173827),
+        (41.404108, 2.173827),
+        (41.404116, 2.173831),
+        (41.404116, 2.173838),
+        (41.404091, 2.173838)
+    ))
 )
 
-
 draw_space()
-
-
