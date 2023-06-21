@@ -1,16 +1,12 @@
 import './style/map.css';
-import Legend from './legend';
-import map from '../assets/map.jpg';
-import Filters from './filters';
-import Stack from "@mui/material/Stack";
+import Grid from "./grid";
 
-function Map() {
+function Map(props) {
     return (
-        <Stack direction="column" spacing={'1.5vw'}>
-            <Legend />
-            <img src={map} className="map" alt="map" />
-            <Filters />
-        </Stack>
+        <div>
+            <Grid width={60} height={38} rows={7} columns={12} cellSize={5.5} margin={{x: -2, y: -0.4}} hasCoordinates={true} gap={5} startingLat={15} startingLon={26} fontSize="0.8vw"/>
+            <img src={props.src} className="map" alt="map" />
+        </div>
     )
 }
 

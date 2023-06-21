@@ -19,11 +19,11 @@ const WhiteCheckbox = styled(Checkbox)(() => ({
     },
 }));
 
-export default function Filters() {
+function Filters(props) {
     const [visible, setVisible] = React.useState('none');
     const [checked, setChecked] = React.useState([0]);
 
-    const labelName = ['grid', 'position', 'status', 'battery'];
+    const labelName = props.list;
 
     const open = visible === "none";
     
@@ -99,3 +99,5 @@ export default function Filters() {
         </div>
     );
 }
+
+export default Filters;
