@@ -130,79 +130,6 @@ async def update_status(serialNumber: str, newBattery: int):
     cursor.close()
     return {"Success": "Robot battery updated"}
 
-def is_position_valid(latitude: float, longitude: float):
-# controllo rettangolo
-    
-    min_latitude = 2.173778
-    max_latitude = 2.173838
-    min_longitude = 41.404056
-    max_longitude = 41.404151
-    
-    if not (min_longitude < longitude < max_longitude):
-        return False
-    if not (min_latitude < latitude < max_latitude):
-        return False
-    
-# controllo ostacoli
-    min_distance = 0.000005
-    point = Point(longitude, latitude)
-    for obstacle in obstacles:
-        if obstacle.distance(point) < min_distance:
-            return False
-
-def move_robot(robot_coordinate):
-
-    current_position = (float(robot_coordinate[0]), float(robot_coordinate[1]))  # Convert to tuple
-    distance = 0.000006
-    angle = random.uniform(0, 360)  # random angle in degrees
-    angle_radians = math.radians(angle)  # conversion to radians
-    delta_lon = distance * math.cos(angle_radians)  # change in longitude
-    delta_lat = distance * math.sin(angle_radians)  # change in latitude
-    new_lon = current_position[0] + delta_lon
-    new_lat = current_position[1] + delta_lat
-    new_coordinate = (new_lon, new_lat)
-
-    while not is_position_valid(new_lon, new_lat):
-        # check the position; if not valid, recalculate
-        angle = random.uniform(0, 360)
-        angle_radians = math.radians(angle)
-        delta_lon = distance * math.cos(angle_radians)
-        delta_lat = distance * math.sin(angle_radians)
-        new_lon = current_position[0] + delta_lon
-        new_lat = current_position[1] + delta_lat
-        new_coordinate = (new_lon, new_lat)
-
-    return new_coordinate
-
-@app.put("/robot_coordinates/{model}")
-def update_robot_coordinates(model: str):
-    # Retrieve the robot coordinates from the database using the provided ID
-    cursor = conn.cursor()
-    cursor.execute("SELECT latitude, longitude FROM robots WHERE model = %s", (model,))
-    
-    # Fetch the first row of the result
-    result = cursor.fetchone()
-
-    if result is not None:
-    # Retrieve the latitude and longitude from the result tuple
-        robot_coordinate = (result[0], result[1])
-    cursor.close()
-
-    # Call the move_robot function to calculate the new coordinate
-    new_coordinate = move_robot(robot_coordinate)
-
-    # Update the robot's coordinate in the database
-    cursor = conn.cursor()
-    cursor.execute(
-        "UPDATE robots SET latitude, longitude = %s WHERE model = %s",
-        (new_coordinate, model)
-    )
-    conn.commit()
-    cursor.close()
-
-    # Return the updated robot coordinate as the response
-    return {"new_coordinate": new_coordinate}
-
 def is_position_valid(longitude: float, latitude: float):
     # Check rectangle bounds
     min_latitude = 2.173778
@@ -216,7 +143,7 @@ def is_position_valid(longitude: float, latitude: float):
         return False
 
     # Check obstacles
-    min_distance = 0.000005
+    min_distance = 0.000007
     point = Point(longitude, latitude)
     for obstacle in obstacles:
         if obstacle.distance(point) < min_distance:
@@ -250,7 +177,7 @@ def move_robot(robot_coordinate):
         attempts += 1
 
     if attempts > MAX_ATTEMPTS:
-        raise Exception("Unable to find a valid position within the maximum attempt limit.")
+        return {"error": "valid position not found"}
 
     return new_coordinate
 
