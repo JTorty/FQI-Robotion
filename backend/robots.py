@@ -1,3 +1,6 @@
+### deprecated
+
+
 from coordinates import Geo_Coordinate
 from shapely.geometry import Polygon, Point
 

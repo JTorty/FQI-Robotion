@@ -3,8 +3,12 @@ from psycopg2 import IntegrityError
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from coordinates import Geo_Coordinate
+from space import is_position_valid
+import math, random
+from obstacles import obstacles
+from shapely.geometry import Point
 
-app = FastAPI()
+app = FastAPI() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,15 +21,8 @@ app.add_middleware(
 conn = psycopg2.connect(database="Robotion",
                         host="localhost",
                         user="postgres",
-                        password="password",
+                        password="password", 
                         port="5432")
-
-cursor = conn.cursor()
-
-cursor.execute("SELECT model FROM robots WHERE model = 'AAA'")
-
-# print(cursor.execute("SELECT * FROM robots"))
-print(cursor.fetchall())
 
 @app.get("/getrobot/{robot_model}")
 async def get_robot(robot_model: str):
@@ -98,7 +95,7 @@ async def update_status(serialNumber: str, newStatus: str):
     update_query = f"UPDATE robots SET status='{newStatus}' WHERE model='{serialNumber}'"
     select_query = f"SELECT model FROM robots WHERE model='{serialNumber}'"
     
-    if newStatus not in {'idle', 'online', 'offline'}:
+    if newStatus not in {'idle', 'operative', 'offline', 'online'}:
         return {"error": "Status not valid"}
 
     cursor = conn.cursor()
@@ -112,20 +109,6 @@ async def update_status(serialNumber: str, newStatus: str):
 
     cursor.close()
     return {"Success": "Robot status updated"}
-
-
-@app.put("/updateposition")
-async def update_position(serialNumber: str, newLatitude: float, newLongitude: float):
-    update_query = f"UPDATE robots SET latitude={newLatitude}, longitude={newLongitude} WHERE model='{serialNumber}'"
-    select_query = f"SELECT model FROM robots WHERE model='{serialNumber}'"
-    cursor = conn.cursor()
-    cursor.execute(select_query)
-    if not cursor.fetchone():
-        return {"Error": "No such robot"}
-    cursor.execute(update_query)
-    conn.commit()
-    cursor.close()
-    return {"Success": "Robot position updated"}
 
 @app.put("/updatebattery")
 async def update_status(serialNumber: str, newBattery: int):
@@ -146,6 +129,164 @@ async def update_status(serialNumber: str, newBattery: int):
 
     cursor.close()
     return {"Success": "Robot battery updated"}
+
+def is_position_valid(latitude: float, longitude: float):
+# controllo rettangolo
+    
+    min_latitude = 2.173778
+    max_latitude = 2.173838
+    min_longitude = 41.404056
+    max_longitude = 41.404151
+    
+    if not (min_longitude < longitude < max_longitude):
+        return False
+    if not (min_latitude < latitude < max_latitude):
+        return False
+    
+# controllo ostacoli
+    min_distance = 0.000005
+    point = Point(longitude, latitude)
+    for obstacle in obstacles:
+        if obstacle.distance(point) < min_distance:
+            return False
+
+def move_robot(robot_coordinate):
+
+    current_position = (float(robot_coordinate[0]), float(robot_coordinate[1]))  # Convert to tuple
+    distance = 0.000006
+    angle = random.uniform(0, 360)  # random angle in degrees
+    angle_radians = math.radians(angle)  # conversion to radians
+    delta_lon = distance * math.cos(angle_radians)  # change in longitude
+    delta_lat = distance * math.sin(angle_radians)  # change in latitude
+    new_lon = current_position[0] + delta_lon
+    new_lat = current_position[1] + delta_lat
+    new_coordinate = (new_lon, new_lat)
+
+    while not is_position_valid(new_lon, new_lat):
+        # check the position; if not valid, recalculate
+        angle = random.uniform(0, 360)
+        angle_radians = math.radians(angle)
+        delta_lon = distance * math.cos(angle_radians)
+        delta_lat = distance * math.sin(angle_radians)
+        new_lon = current_position[0] + delta_lon
+        new_lat = current_position[1] + delta_lat
+        new_coordinate = (new_lon, new_lat)
+
+    return new_coordinate
+
+@app.put("/robot_coordinates/{model}")
+def update_robot_coordinates(model: str):
+    # Retrieve the robot coordinates from the database using the provided ID
+    cursor = conn.cursor()
+    cursor.execute("SELECT latitude, longitude FROM robots WHERE model = %s", (model,))
+    
+    # Fetch the first row of the result
+    result = cursor.fetchone()
+
+    if result is not None:
+    # Retrieve the latitude and longitude from the result tuple
+        robot_coordinate = (result[0], result[1])
+    cursor.close()
+
+    # Call the move_robot function to calculate the new coordinate
+    new_coordinate = move_robot(robot_coordinate)
+
+    # Update the robot's coordinate in the database
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE robots SET latitude, longitude = %s WHERE model = %s",
+        (new_coordinate, model)
+    )
+    conn.commit()
+    cursor.close()
+
+    # Return the updated robot coordinate as the response
+    return {"new_coordinate": new_coordinate}
+
+def is_position_valid(longitude: float, latitude: float):
+    # Check rectangle bounds
+    min_latitude = 2.173778
+    max_latitude = 2.174078
+    min_longitude = 41.404056
+    max_longitude = 41.404531
+
+    if not (min_longitude < longitude < max_longitude):
+        return False
+    if not (min_latitude < latitude < max_latitude):
+        return False
+
+    # Check obstacles
+    min_distance = 0.000005
+    point = Point(longitude, latitude)
+    for obstacle in obstacles:
+        if obstacle.distance(point) < min_distance:
+            return False
+
+    return True
+
+MAX_ATTEMPTS = 100
+
+def move_robot(robot_coordinate):
+    current_position = (float(robot_coordinate[0]), float(robot_coordinate[1]))  # Convert to float
+    distance = 0.000007
+    angle = random.uniform(0, 360)  # random angle in degrees
+    angle_radians = math.radians(angle)  # conversion to radians
+    delta_lon = distance * math.cos(angle_radians)  # change in longitude
+    delta_lat = distance * math.sin(angle_radians)  # change in latitude
+    new_lon = float(current_position[0]) + delta_lon  # Convert to float
+    new_lat = float(current_position[1]) + delta_lat  # Convert to float
+    new_coordinate = (new_lon, new_lat)
+
+    attempts = 1
+    while not is_position_valid(new_lon, new_lat) and attempts <= MAX_ATTEMPTS:
+        # check the position; if not valid, recalculate
+        angle = random.uniform(0, 360)
+        angle_radians = math.radians(angle)
+        delta_lon = distance * math.cos(angle_radians)
+        delta_lat = distance * math.sin(angle_radians)
+        new_lon = float(current_position[0]) + delta_lon  # Convert to float
+        new_lat = float(current_position[1]) + delta_lat  # Convert to float
+        new_coordinate = (new_lon, new_lat)
+        attempts += 1
+
+    if attempts > MAX_ATTEMPTS:
+        raise Exception("Unable to find a valid position within the maximum attempt limit.")
+
+    return new_coordinate
+
+@app.put("/robot_coordinates/{model}")
+def update_robot_coordinates(model: str):
+    try:
+        # Retrieve the robot coordinates from the database using the provided ID
+        cursor = conn.cursor()
+        cursor.execute("SELECT longitude, latitude FROM robots WHERE model = %s", (model,))
+
+        # Fetch the first row of the result
+        result = cursor.fetchone()
+
+        if result is not None:
+            # Retrieve the latitude and longitude from the result tuple
+            robot_coordinate = (result[0], result[1])
+
+            # Call the move_robot function to calculate the new coordinate
+            new_coordinate = move_robot(robot_coordinate)
+
+            # Update the robot's coordinate in the database
+            cursor.execute(
+                "UPDATE robots SET longitude = %s, latitude = %s WHERE model = %s",
+                (new_coordinate[0], new_coordinate[1], model)
+            )
+            conn.commit()
+
+            # Return the updated robot coordinate as the response
+            return {"new_coordinate": [round(new_coordinate[0],6), round(new_coordinate[1],6)]}
+        else:
+            return {"error": "Robot not found."}
+    except IntegrityError:
+        conn.rollback()
+        return {"error": "IntegrityError occurred. Failed to update robot coordinates."}
+    finally:
+        cursor.close()
 
 @app.post("/addrobot")
 async def add_robot(serialNumber: str, status: str, battery: int, longitude: float, latitude: float):
@@ -178,4 +319,3 @@ async def delete_robot(serialNumber: str):
     conn.commit()
     cursor.close()
     return {"Success": "Robot deleted"}
-

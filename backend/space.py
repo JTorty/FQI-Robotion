@@ -1,58 +1,56 @@
-from robots import Robot, robot1, robot2, robot3, robot4, robot5
 from coordinates import Geo_Coordinate
-from obstacles import Obstacle, obstacle1, obstacle2, obstacle3
 from shapely.geometry import Polygon, Point
-import shapely.affinity
 import matplotlib.pyplot as plt
 import random
 import math
+from obstacles import obstacles
 
-robots: dict[str, Robot] = {}
-obstacles: list[Polygon] = []
 travel_space: Polygon = None
 
+positions: list[Point] = []
 
-def set_travel_space(*coordinates: Geo_Coordinate):
-    global travel_space
-    travel_space = Polygon(map(lambda coord: coord.get_point(), coordinates))
-
-
-def add_robot(robot: Robot):
-    global robots
-    robots[robot.serial_number] = robot
+positions.append(Point(41.404123, 2.173999))
 
 
-def add_obstacle(obstacle: Obstacle):
-    global obstacles
-    obstacles.append(obstacle)
+#generatore posizioni iniziali random
+def generate_position():
+    min_distance = 0.000007
     
+    for i in range(9):
+        
+        correct_position = False
+        while correct_position == False:
+            x = round(random.uniform(41.404056 + min_distance, 41.404531 - min_distance), 6)
+            y = round(random.uniform(2.173778 + min_distance, 2.174078 - min_distance), 6)
+            point = Point(x, y)
+            is_colliding = False
+            for obstacle in obstacles:
+                if obstacle.distance(point) < min_distance:
+                    is_colliding = True
+                    break
+                else:
+                    pass
+            if is_colliding == False:
+                positions.append(point)
+                correct_position = True
+            else:
+                pass
 
-def is_robot_valid(serial_number: str) -> bool:
-    shape = robots[serial_number].get_shape()
-    if not travel_space.covers(shape):
+generate_position()
+for position in positions:
+   print(position.x, position.y)
+
+def is_position_valid(longitude: float, latitude: float):
+    # Check rectangle bounds
+    min_latitude = 2.173778
+    max_latitude = 2.174078
+    min_longitude = 41.404056
+    max_longitude = 41.404531
+
+    if not (min_longitude < longitude < max_longitude):
         return False
-    for obstacle in obstacles:
-        if obstacle.is_colliding(shape):
-            return False
-    for other_robot in robots.values():
-        if (other_robot.serial_number != serial_number) and (other_robot.is_colliding(shape)):
-            return False
-    return True
-
-
-def is_position_valid(new_coordinate: Geo_Coordinate) -> bool:
-    """Return true if this coordinate would be a valid position for this robot"""
-    shape = new_coordinate.get_point()
-    if not travel_space.covers(shape):
+    if not (min_latitude < latitude < max_latitude):
         return False
-    for obstacle in obstacles:
-        if obstacle.is_colliding(shape):
-            return False
-    # for other_robot in robots.values():
-    #     if (other_robot.serial_number != serial_number) and (other_robot.is_colliding(shape)):
-    #         return False
-    return True
-
 
 def draw_space():
     _, ax = plt.subplots()
@@ -64,16 +62,8 @@ def draw_space():
     ax.plot(*travel_space.exterior.xy, color='black', linewidth=3)
 
     # draw robots
-    for robot in robots.values():
-        point = robot.get_point()
-        circle = robot.get_shape()
-        if is_robot_valid(robot.serial_number):
-            ax.scatter(point.x, point.y, s=10, facecolor='black')
-        else:
-            ax.scatter(point.x, point.y, s=30, facecolor='black', marker='x')
-        ax.fill(*circle.exterior.xy, alpha=0.3, edgecolor='none', color='grey')
-        ax.text(point.x, point.y, f'{robot.serial_number}',
-                ha='center', va='bottom', fontsize=7)
+    for position in positions:
+        ax.scatter(position.x, position.y, s=10, facecolor='black')
 
     # draw obstacles
     for obstacle in obstacles:
@@ -104,80 +94,12 @@ def move_robot(robot_coordinate):
     
     return new_coordinate
 
-set_travel_space(
-    Geo_Coordinate(41.404056, 2.173778, decimal=True),
-    Geo_Coordinate(41.404151, 2.173778, decimal=True),
-    Geo_Coordinate(41.404151, 2.173838, decimal=True),
-    Geo_Coordinate(41.404056, 2.173838, decimal=True)
-)
-
-#colonna in alto a sinistra
-obstacles.append(
-    Polygon
-    ((
-        (41.404073, 2.173820),
-        (41.404077, 2.173820),
-        (41.404077, 2.173824),
-        (41.404073, 2.173824)
-    ))
-)
-
-#colonna in alto a destra
-obstacles.append(
-    Polygon
-    ((
-        (41.404130, 2.173820),
-        (41.404134, 2.173820),
-        (41.404134, 2.173824),
-        (41.404130, 2.173824)
-    ))
-)
-
-#colonna in basso a sinistra
-obstacles.append(
-    Polygon
-    ((
-        (41.404073, 2.173788),
-        (41.404077, 2.173788),
-        (41.404077, 2.173792),
-        (41.404073, 2.173792)
-    ))
-)
-
-#colonna in basso a destra
-obstacles.append(
-    Polygon
-    ((
-        (41.404130, 2.173788),
-        (41.404134, 2.173788),
-        (41.404134, 2.173792),
-        (41.404130, 2.173792)
-    ))
-)
-
-#scrivania in alto a destra
-obstacles.append(
-    Polygon
-    ((
-        (41.404143, 2.173824),
-        (41.404151, 2.173824),
-        (41.404151, 2.173838),
-        (41.404143, 2.173838)
-    ))
-)
-
-#pedana di monitoraggio
-obstacles.append(
-    Polygon
-    ((
-        (41.404091, 2.173831),
-        (41.404098, 2.173827),
-        (41.404103, 2.173827),
-        (41.404108, 2.173827),
-        (41.404116, 2.173831),
-        (41.404116, 2.173838),
-        (41.404091, 2.173838)
-    ))
-)
+#perimetro stanza
+travel_space = Polygon((
+    (41.404056, 2.173778),
+    (41.404531, 2.173778),
+    (41.404531, 2.174078),
+    (41.404056, 2.174078),
+))
 
 draw_space()

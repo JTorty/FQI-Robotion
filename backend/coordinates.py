@@ -1,6 +1,5 @@
 from shapely.geometry import Point
 
-
 class Geo_Coordinate:
     @staticmethod
     def from_dms_to_dd(lon: tuple[int, int, float], lat: tuple[int, int, float]) -> tuple[float, float]:

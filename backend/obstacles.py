@@ -1,47 +1,53 @@
 from shapely.geometry import Polygon, Point
-from shapely.affinity import scale
-from coordinates import Geo_Coordinate
 
+obstacles: list[Polygon] = []
 
-class Obstacle:
-    def __init__(self, *coordinates: Geo_Coordinate) -> None:
-        self.polygon = Polygon(
-            map(lambda coord: coord.get_point(), coordinates))
+#camera di monitoraggio
+obstacles.append(Polygon((
+    (41.404231, 2.174043),
+    (41.404271, 2.174023),
+    (41.404316, 2.174023),
+    (41.404356, 2.174043),
+    (41.404356, 2.174078),
+    (41.404231, 2.174078),
+)))
 
-    @staticmethod
-    def create_circle_obstacle(center: Geo_Coordinate, radius=0.0001):
-        new_obstacle = Obstacle.__new__(Obstacle)
-        new_obstacle.polygon = center.get_point().buffer(radius)
-        return new_obstacle
+#scrivania nell'angolo in alto a destra
+obstacles.append(Polygon((
+    (41.404491, 2.174008),
+    (41.404531, 2.174008),
+    (41.404531, 2.174078),
+    (41.404491, 2.174078),
+)))
 
-    def get_polygon(self) -> Polygon:
-        return self.polygon
+#colonna in alto a sinistra
+obstacles.append(Polygon((
+    (41.404141, 2.173988),
+    (41.404161, 2.173988),
+    (41.404161, 2.174008),
+    (41.404141, 2.174008),
+)))
 
-    def is_colliding(self, shape: Polygon) -> bool:
-        """Returns True if the shape is colliding with this obstacle"""
-        return self.get_polygon().intersects(shape)
+#colonna in alto a destra
+obstacles.append(Polygon((
+    (41.404426, 2.173988),
+    (41.404446, 2.173988),
+    (41.404446, 2.174008),
+    (41.404426, 2.174008),
+)))
 
+#colonna in basso a sinistra
+obstacles.append(Polygon((
+    (41.404141, 2.173828),
+    (41.404161, 2.173828),
+    (41.404161, 2.173848),
+    (41.404141, 2.173848),
+)))
 
-obstacle1 = Obstacle(
-    Geo_Coordinate((2, 10, 26.0), (41, 24, 15.0), decimal=False),
-    Geo_Coordinate((2, 10, 27.0), (41, 24, 15.0), decimal=False),
-    Geo_Coordinate((2, 10, 27.0), (41, 24, 16.0), decimal=False),
-    Geo_Coordinate((2, 10, 26.0), (41, 24, 16.0), decimal=False),
-)
-
-square = Polygon( ((2.174800, 41.404400), (2.175000, 41.404400), (2.175000, 41.404600), (2.174800, 41.404600)) )
-circle = Point(2.174900, 41.404400).buffer(0.0001)
-shape = square.union(circle)
-coords = tuple(Geo_Coordinate(coord[0], coord[1]) for coord in shape.exterior.coords)
-obstacle2 = Obstacle(*coords)
-
-
-# obstacle2 = Obstacle(
-#     Geo_Coordinate(2.174800, 41.404400, decimal=True),
-#     Geo_Coordinate(2.175000, 41.404400, decimal=True),
-#     Geo_Coordinate(2.175000, 41.404600, decimal=True),
-#     Geo_Coordinate(2.174800, 41.404600, decimal=True),
-# )
-
-obstacle3 = Obstacle.create_circle_obstacle(
-    Geo_Coordinate(2.1746, 41.4046, decimal=True))
+#colonna in basso a destra
+obstacles.append(Polygon((
+    (41.404426, 2.173828),
+    (41.404446, 2.173828),
+    (41.404446, 2.173848),
+    (41.404426, 2.173848),
+)))
