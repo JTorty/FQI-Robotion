@@ -1,0 +1,6 @@
+.robot-map {
+    z-index: 100;
+    position: absolute;
+    width: 5vw;
+    height: 5vw;
+}
