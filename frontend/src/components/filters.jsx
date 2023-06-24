@@ -21,7 +21,7 @@ const WhiteCheckbox = styled(Checkbox)(() => ({
 
 function Filters(props) {
     const [visible, setVisible] = React.useState('none');
-    const [checked, setChecked] = React.useState([0]);
+    const [checked, setChecked] = React.useState([-1]);
 
     const labelName = props.list;
 
@@ -72,6 +72,7 @@ function Filters(props) {
                         return (
                             <ListItem
                                 key={value}
+                                onClick={props.checkBoxes(labelId)}
                                 disablePadding
                             >
                                 <ListItemButton role={undefined} onClick={handleToggle(value)} disableRipple dense sx={{

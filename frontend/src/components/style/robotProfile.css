@@ -1,9 +1,13 @@
-div.avatar img {
+.avatar, .badge {
+    cursor: pointer;
+}
+
+.avatar img {
     width: 5vw;
     height: 5vw;
 }
 
-.borderAvatar {
+.badge {
     position: relative;
     z-index: 100;
     margin-top: -1.45vw;
@@ -17,7 +21,7 @@ div.avatar img {
     align-items: center;
 }
 
-.borderAvatar span {
+.badge span {
     color: #000;
     font-size: 0.7vw;
 }
