@@ -7,6 +7,7 @@ from space import is_position_valid
 import math, random
 from obstacles import obstacles
 from shapely.geometry import Point
+from space import min_distance
 
 app = FastAPI() 
 
@@ -130,12 +131,13 @@ async def update_status(serialNumber: str, newBattery: int):
     cursor.close()
     return {"Success": "Robot battery updated"}
 
+
 def is_position_valid(longitude: float, latitude: float):
     # Check rectangle bounds
-    min_latitude = 2.173778
-    max_latitude = 2.174078
+    min_latitude = 2.174078
+    max_latitude = 2.174198
     min_longitude = 41.404056
-    max_longitude = 41.404531
+    max_longitude = 41.404246
 
     if not (min_longitude < longitude < max_longitude):
         return False
@@ -143,7 +145,7 @@ def is_position_valid(longitude: float, latitude: float):
         return False
 
     # Check obstacles
-    min_distance = 0.000007
+    
     point = Point(longitude, latitude)
     for obstacle in obstacles:
         if obstacle.distance(point) < min_distance:
@@ -151,15 +153,15 @@ def is_position_valid(longitude: float, latitude: float):
 
     return True
 
-MAX_ATTEMPTS = 100
+MAX_ATTEMPTS = 300
 
 def move_robot(robot_coordinate):
     current_position = (float(robot_coordinate[0]), float(robot_coordinate[1]))  # Convert to float
-    distance = 0.000007
+    min_distance = 0.000007
     angle = random.uniform(0, 360)  # random angle in degrees
     angle_radians = math.radians(angle)  # conversion to radians
-    delta_lon = distance * math.cos(angle_radians)  # change in longitude
-    delta_lat = distance * math.sin(angle_radians)  # change in latitude
+    delta_lon = min_distance * math.cos(angle_radians)  # change in longitude
+    delta_lat = min_distance * math.sin(angle_radians)  # change in latitude
     new_lon = float(current_position[0]) + delta_lon  # Convert to float
     new_lat = float(current_position[1]) + delta_lat  # Convert to float
     new_coordinate = (new_lon, new_lat)
@@ -169,8 +171,8 @@ def move_robot(robot_coordinate):
         # check the position; if not valid, recalculate
         angle = random.uniform(0, 360)
         angle_radians = math.radians(angle)
-        delta_lon = distance * math.cos(angle_radians)
-        delta_lat = distance * math.sin(angle_radians)
+        delta_lon = min_distance * math.cos(angle_radians)
+        delta_lat = min_distance * math.sin(angle_radians)
         new_lon = float(current_position[0]) + delta_lon  # Convert to float
         new_lat = float(current_position[1]) + delta_lat  # Convert to float
         new_coordinate = (new_lon, new_lat)

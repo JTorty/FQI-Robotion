@@ -9,19 +9,19 @@ travel_space: Polygon = None
 
 positions: list[Point] = []
 
-positions.append(Point(41.404123, 2.173999))
+# positions.append(Point(41.404123, 2.173999))
 
+min_distance = 0.000007
 
 #generatore posizioni iniziali random
 def generate_position():
-    min_distance = 0.000007
+
     
-    for i in range(9):
-        
-        correct_position = False
-        while correct_position == False:
-            x = round(random.uniform(41.404056 + min_distance, 41.404531 - min_distance), 6)
-            y = round(random.uniform(2.173778 + min_distance, 2.174078 - min_distance), 6)
+    for i in range(10):
+        position_found = False
+        while position_found == False:
+            x = round(random.uniform(41.404056 + min_distance, 41.404246 - min_distance), 6)
+            y = round(random.uniform(2.174078 + min_distance, 2.174198 - min_distance), 6)
             point = Point(x, y)
             is_colliding = False
             for obstacle in obstacles:
@@ -30,27 +30,37 @@ def generate_position():
                     break
                 else:
                     pass
+            if is_colliding == True:
+                continue
+            for position in positions:
+                if position.distance(point) < min_distance * 2:
+                    is_colliding = True
+                    break
+                else:
+                    pass                
             if is_colliding == False:
                 positions.append(point)
-                correct_position = True
+                position_found = True
             else:
                 pass
-
+            
 generate_position()
 for position in positions:
    print(position.x, position.y)
 
 def is_position_valid(longitude: float, latitude: float):
     # Check rectangle bounds
-    min_latitude = 2.173778
-    max_latitude = 2.174078
+    min_latitude = 2.174078
+    max_latitude = 2.174198
     min_longitude = 41.404056
-    max_longitude = 41.404531
+    max_longitude = 41.404246
 
     if not (min_longitude < longitude < max_longitude):
         return False
     if not (min_latitude < latitude < max_latitude):
         return False
+
+
 
 def draw_space():
     _, ax = plt.subplots()
@@ -64,7 +74,8 @@ def draw_space():
     # draw robots
     for position in positions:
         ax.scatter(position.x, position.y, s=10, facecolor='black')
-
+        ax.fill(*position.buffer(min_distance).exterior.xy)
+        
     # draw obstacles
     for obstacle in obstacles:
         ax.fill(*obstacle.exterior.xy,
@@ -72,7 +83,7 @@ def draw_space():
     plt.show()
 
 def move_robot(robot_coordinate):
-    distance = 0.000006
+    distance = 0.000001
     current_position = robot_coordinate
     angle = random.uniform(0, 360)  # random angle in degrees
     angle_radians = math.radians(angle)  # conversion to radians
@@ -94,12 +105,12 @@ def move_robot(robot_coordinate):
     
     return new_coordinate
 
-#perimetro stanza
+# perimetro stanza
 travel_space = Polygon((
-    (41.404056, 2.173778),
-    (41.404531, 2.173778),
-    (41.404531, 2.174078),
-    (41.404056, 2.174078),
+    (41.404056, 2.174198), #ul
+    (41.404246, 2.174198), #ur
+    (41.404246, 2.174078), #lr
+    (41.404056, 2.174078), #ll
 ))
 
 draw_space()
