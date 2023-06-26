@@ -9,7 +9,7 @@ import pinkAvatar from '../assets/avatars/pink_robot.png';
 import redAvatar from '../assets/avatars/red_robot.png';
 import turquoiseAvatar from '../assets/avatars/turquoise_robot.png';
 import yellowAvatar from '../assets/avatars/yellow_robot.png';
-import {useRef} from "react";
+import { useRef } from "react";
 
 function RobotProfile(props) {
     const avatarElement = useRef(null);
@@ -91,11 +91,13 @@ function RobotProfile(props) {
     return (
         <div>
             <div className="avatar" onClick={handleClick}>
-                <img src={avatar} ref={avatarElement} alt={`${props.color} avatar`} style={{opacity: 1}}/>
+                <img src={avatar} ref={avatarElement} alt={`${props.color} avatar`} style={{ opacity: 1 }} />
             </div>
             <div className="badge">
                 <span>{props.model}</span>
             </div>
+            {props.color === "white" && <div className="popup_robot">
+            </div>}
         </div>
     );
 }
