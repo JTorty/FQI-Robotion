@@ -33,13 +33,15 @@ function RobotMap(props) {
     avatar = yellowAvatar;
   }
 
+  const vwTot = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
   return (
     <div style={{display: props.isVisible ? 'block' : 'none'}}>
       <img
         src={avatar}
         alt={`${props.color} avatar`}
         className="robot-map"
-        style={{margin: `${props.position.latitude}px ${props.position.longitude}px`}}
+        style={{margin: `${props.position.latitude.pixels / vwTot * 100}vw  ${props.position.longitude.pixels / vwTot * 100}vw`}}
     />
     </div>
 );

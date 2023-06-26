@@ -35,7 +35,7 @@ function Grid(props) {
                 }}>
                     <Stack className="grid-coordinates-y" direction="column-reverse"
                         spacing={`calc(${cellSize * gap}vw - ${fontSize}*1.2)`}
-                        sx={{marginBottom: `calc(${cellSize}vw + ${fontSize}*0.75)`}}
+                        sx={{marginBottom: `calc(${cellSize - props.margin.y}vw + ${fontSize}*0.35)`}}
                         >
                         {Array.from({length: Math.floor((props.rows - 1) / gap) + 1}, (_, index) => (
                             <div key={index} className="coordinate-y" style={{transform: 'rotate(-90deg)'}}>{props.startingLat + index}"</div>

@@ -1,0 +1,16 @@
+.popup_robot {
+    border: 0.12vw solid #dddd;
+    width: 9vw;
+    height: 12vw;
+    position: absolute;
+    border-radius: 1vw;
+    background: #e8e8e8;
+}
+
+.popup_robot_left {
+    margin: -5vw 0 0 -10vw;
+}
+
+.popup_robot_right {
+    margin: -5vw 0 0 6vw;
+}

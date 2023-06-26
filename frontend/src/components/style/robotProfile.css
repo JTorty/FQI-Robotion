@@ -25,13 +25,3 @@
     color: #000;
     font-size: 0.7vw;
 }
-
-.popup_robot {
-    border: 0.12vw solid #dddd;
-    width: 9vw;
-    height: 12vw;
-    margin: -5vw 0 0 -10vw;
-    position: absolute;
-    border-radius: 1vw;
-    background: #e8e8e8;
-}
