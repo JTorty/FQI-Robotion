@@ -25,6 +25,7 @@ def populate_database():
     try:
         cursor.executemany(insert_query, data_to_insert)
         conn.commit()
+        print("Insert successful")
     except (Exception, psycopg2.Error) as error:
         conn.rollback()
         print("Error inserting multiple rows:", error)
@@ -40,12 +41,12 @@ def update_database():
     data_to_update = [(*get_robot_location(model), round(robot.center.x),
                        round(robot.center.y), model) for model, robot in ROBOTS.items()]
     update_query = "UPDATE robots SET longitude = %s, latitude = %s, x_pixel = %s, y_pixel = %s WHERE model = %s"
-    
     cursor = conn.cursor()
     try:
         for row in data_to_update:
             cursor.execute(update_query, row)
         conn.commit()
+        print("Update successful")
     except (Exception, psycopg2.Error) as error:
         conn.rollback()
         print("Error executing multiple updates:", error)
