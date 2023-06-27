@@ -19,7 +19,7 @@ function Map(props) {
                 <RobotMap color="blue" isVisible={props.areRobotsVisible.isBlueRobotVisible} position={{ latitude: {pixels: 210}, longitude: {pixels: 50} }}/>
             </Stack>
             {props.hasGrid &&
-            <Grid width={60} height={38} rows={7} columns={12} cellSize={5.5} margin={{x: 0, y: -0.4}} hasCoordinates={true} gap={8} startingLat={27} startingLon={15} offsetLatCells={2} offsetLonCells={2} fontSize="0.8vw"/>
+            <Grid width={60} height={38} rows={10} columns={14} cellSize={4.3} margin={{x: 0, y: -1.7}} hasCoordinates={true} scale={0.05} startingLat={26.65} startingLon={14.6} offsetLat={1} offsetLon={1} fontSize="0.8vw"/>
             }
             <img src={props.src} className="map" alt="map" />
         </div>

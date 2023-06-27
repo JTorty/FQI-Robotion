@@ -80,32 +80,8 @@ function RobotProfile(props) {
     const [isYellowPopupVisible, setIsYellowPopupVisible] = useState(false);
 
     const handleBadgeClick = () => {
-        if (badgeEl.current.style.opacity === '1') {
-            badgeEl.current.style.opacity = '0';
-
-            if (badgeEl.current.classList.contains("badge-white")) {
-                setIsWhitePopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-black")) {
-                setIsBlackPopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-blue")) {
-                setIsBluePopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-brown")) {
-                setIsBrownPopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-green")) {
-                setIsGreenPopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-orange")) {
-                setIsOrangePopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-pink")) {
-                setIsPinkPopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-red")) {
-                setIsRedPopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-turquoise")) {
-                setIsTurquoisePopupVisible(true);
-            } else if (badgeEl.current.classList.contains("badge-yellow")) {
-                setIsYellowPopupVisible(true);
-            }
-        } else {
-            badgeEl.current.style.opacity = '1';
+        if (badgeEl.current.classList.contains("button")) {
+            badgeEl.current.classList.remove("button");
 
             if (badgeEl.current.classList.contains("badge-white")) {
                 setIsWhitePopupVisible(false);
@@ -127,6 +103,30 @@ function RobotProfile(props) {
                 setIsTurquoisePopupVisible(false);
             } else if (badgeEl.current.classList.contains("badge-yellow")) {
                 setIsYellowPopupVisible(false);
+            }
+        } else {
+            badgeEl.current.classList.add("button");
+
+            if (badgeEl.current.classList.contains("badge-white")) {
+                setIsWhitePopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-black")) {
+                setIsBlackPopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-blue")) {
+                setIsBluePopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-brown")) {
+                setIsBrownPopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-green")) {
+                setIsGreenPopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-orange")) {
+                setIsOrangePopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-pink")) {
+                setIsPinkPopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-red")) {
+                setIsRedPopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-turquoise")) {
+                setIsTurquoisePopupVisible(true);
+            } else if (badgeEl.current.classList.contains("badge-yellow")) {
+                setIsYellowPopupVisible(true);
             }
         }
     }
@@ -175,9 +175,9 @@ function RobotProfile(props) {
                 <img src={avatar} ref={avatarEl} alt={`${props.color} avatar`} style={{ opacity: 1 }} />
             </div>
             <div className={`badge badge-${props.color}`} onClick={handleBadgeClick} ref={badgeEl} style={{ opacity: 1 }} >
-                <span>{props.model}</span>
+                <span>{badgeEl.current && badgeEl.current.classList.contains("button") ? 'minimize' : props.model}</span>
             </div>
-            <Popup color={props.color} isVisible={isPopupVisible} position={popupPos}/>
+            <Popup color={props.color} model={props.model} isVisible={isPopupVisible} position={popupPos}/>
         </div>
     );
 }
