@@ -1,6 +1,9 @@
 from shapely import Point, Polygon
 from shapely import affinity
 
+# Obstacles have been created starting from the lower left point,
+# the obstacles' structure then continues with a anti-clockwise direction
+
 # obstacles
 obstacles: list[Polygon] = []
 

@@ -1,4 +1,3 @@
-from space import get_pixels
 import psycopg2
 from psycopg2 import IntegrityError
 from fastapi import FastAPI
@@ -18,7 +17,6 @@ def from_dd_to_dms(dec_lon: float, dec_lat: float) -> tuple[tuple[int, int, floa
     lat_seconds = round((dec_lat - lat_degrees - lat_minutes/60) * 3600, 2)
     return ((lon_degrees, lon_minutes, lon_seconds), (lat_degrees, lat_minutes, lat_seconds))
 
-
 app = FastAPI()
 
 app.add_middleware(
@@ -37,6 +35,12 @@ conn = psycopg2.connect(database="Robotion",
 
 
 def get_robot_info(robot_data):
+    '''
+    Create a JSON compatible dictionary that contains all robots' infos for the FE.
+    
+    robot_data
+        Table raw extracted from the query
+    '''
     decimal_lon, decimal_lat = (float(robot_data[3]), float(robot_data[4]))
     lon, lat = from_dd_to_dms(decimal_lon, decimal_lat)
     robot_dict = {
@@ -61,9 +65,6 @@ def get_robot_info(robot_data):
         }
     }
     return robot_dict
-
-# gets to be used by the FE
-
 
 @app.get("/getrobot")
 async def get_robot(model: str):

@@ -2,20 +2,18 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 from matplotlib.colors import CSS4_COLORS
 from matplotlib.animation import FuncAnimation
-
-
 from obstacles import obstacles
 from robots import *
 from space import *
 
-# update time in milliseconds
+# Update time in milliseconds
 RATE = 500
 
 def simulation():
-    # set space parameters
+    # Set space parameters
     obstacle_color = "grey"
 
-    # set matplot graph parameters
+    # Set matplot graph parameters
     fig = plt.figure()
     ax = fig.gca()
     ax.set_aspect('equal')
@@ -24,16 +22,16 @@ def simulation():
     ax.xaxis.set_major_locator(MultipleLocator(100))
     ax.yaxis.set_major_locator(MultipleLocator(100))
 
-    # define the frame update function
+    # Define the frame update function
     def update(frame):
 
-        # change the space
+        # Change the space
         for model, robot in ROBOTS.items():
             displacement = max(int(RATE/1000 * robot.speed), 1)
             move_robot(model, displacement)
 
         ax.clear()
-        # plot the modifies space
+        # Plot the modifies space
         ax.plot(*space.exterior.xy, color='k',
                 linewidth=0.2, linestyle='dashed')
         for obstacle in obstacles:

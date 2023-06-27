@@ -2,18 +2,21 @@ import requests
 import psycopg2
 from time import sleep
 from space import *
-from robots import ROBOTS, Robot, create_robots, debug_print
-from pprint import pprint
+from robots import ROBOTS, Robot, create_robots
 
-# parameters
-
+# Milliseconds elapsed between database updates
 update_frequency = 600
 sleep_time = update_frequency/1000
 n_robots = 10
+
+# API hostname
 host = "http://localhost:8000"
 
 
 def populate_database():
+    '''
+    Initialize table data
+    '''
     data_to_insert = [(model, robot.status, robot.battery, *get_robot_location(model),
                        round(robot.center.x), round(robot.center.y)) for model, robot in ROBOTS.items()]
     insert_query = "INSERT INTO robots (model, status, battery, longitude, latitude, x_pixel, y_pixel) VALUES (%s, %s, %s, %s, %s, %s, %s)"
@@ -31,6 +34,9 @@ def populate_database():
 
 
 def update_database():
+    '''
+    Update database with new robots' positions
+    '''
     data_to_update = [(*get_robot_location(model), round(robot.center.x),
                        round(robot.center.y), model) for model, robot in ROBOTS.items()]
     update_query = "UPDATE robots SET longitude = %s, latitude = %s, x_pixel = %s, y_pixel = %s WHERE model = %s"
@@ -48,12 +54,12 @@ def update_database():
 
 
 
-# reset and spawn new robots
+# Reset database and spawn new robots
 requests.delete(f'{host}/resetdatabase')
 create_robots(n_robots)
 initialize_positions()
 
-# connect to database
+# Connect to database
 conn = psycopg2.connect(database="Robotion",
                         host="localhost",
                         user="postgres",
@@ -62,11 +68,11 @@ conn = psycopg2.connect(database="Robotion",
 
 populate_database()
 
-i = 1
+# Simulation loop
+
 while True:
     sleep(sleep_time)
-    i += 1
-    print(i)
+
     for model, robot in ROBOTS.items():
         move_robot(model, max(robot.speed * sleep_time, 1))
     update_database()
