@@ -7,7 +7,7 @@ from pprint import pprint
 
 # parameters
 
-update_frequency = 500
+update_frequency = 600
 sleep_time = update_frequency/1000
 n_robots = 10
 host = "http://localhost:8000"
@@ -22,7 +22,6 @@ def populate_database():
     try:
         cursor.executemany(insert_query, data_to_insert)
         conn.commit()
-        print("Multiple rows inserted successfully!")
     except (Exception, psycopg2.Error) as error:
         conn.rollback()
         print("Error inserting multiple rows:", error)
@@ -41,7 +40,6 @@ def update_database():
         for row in data_to_update:
             cursor.execute(update_query, row)
         conn.commit()
-        print("Multiple updates executed successfully!")
     except (Exception, psycopg2.Error) as error:
         conn.rollback()
         print("Error executing multiple updates:", error)
@@ -54,7 +52,6 @@ def update_database():
 requests.delete(f'{host}/resetdatabase')
 create_robots(n_robots)
 initialize_positions()
-# debug_print()
 
 # connect to database
 conn = psycopg2.connect(database="Robotion",
@@ -65,8 +62,11 @@ conn = psycopg2.connect(database="Robotion",
 
 populate_database()
 
+i = 1
 while True:
     sleep(sleep_time)
+    i += 1
+    print(i)
     for model, robot in ROBOTS.items():
         move_robot(model, max(robot.speed * sleep_time, 1))
     update_database()
