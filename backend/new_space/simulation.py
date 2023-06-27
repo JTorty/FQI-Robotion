@@ -31,7 +31,6 @@ def simulation():
         for model, robot in ROBOTS.items():
             displacement = max(int(RATE/1000 * robot.speed), 1)
             move_robot(model, displacement)
-            debug_print()
 
         ax.clear()
         # plot the modifies space
