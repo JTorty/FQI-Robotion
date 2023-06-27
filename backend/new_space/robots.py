@@ -29,7 +29,7 @@ for i in range(10):
     new_robot.color = TABLEAU_COLORS[color_keys.pop()]
     new_robot.speed = ROBOT_SPEED
     new_robot.battery = randint(10, 100)
-    model = f'S/N {str(i).zfill(4)}'
+    model = f'S-{str(i).zfill(2)}'
     ROBOTS[model] = new_robot
 
 
@@ -37,4 +37,4 @@ def debug_print():
     for model, robot in ROBOTS.items():
         print(model, ":", robot)
 
-debug_print()
+#debug_print()

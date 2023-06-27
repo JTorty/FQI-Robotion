@@ -1,5 +1,5 @@
 from robots import ROBOTS, Robot, debug_print
-from space import get_robot_location, initialize_positions, move_robot
+from space import get_robot_location, initialize_positions, move_robot, get_pixels
 import psycopg2
 from psycopg2 import IntegrityError
 from fastapi import FastAPI
@@ -34,34 +34,43 @@ conn = psycopg2.connect(database="Robotion",
                         password="password", 
                         port="5432")
 
+
+def get_robot_info(robot_data):
+    decimal_lon, decimal_lat = (float(robot_data[3]), float(robot_data[4]))
+    lon, lat = from_dd_to_dms(decimal_lon, decimal_lat)
+    x, y = get_pixels(decimal_lon, decimal_lat)
+    robot_dict = {
+        "model": robot_data[0],
+        "status": robot_data[1],
+        "battery": robot_data[2],
+        "position": {
+            "latitude": {
+                "degrees": lat[0],
+                "minutes": lat[1],
+                "seconds": lat[2],
+                "decimal": f'{round(decimal_lat, 6):.6f}',
+                "pixel": y
+            },
+            "longitude": {
+                "degrees": lon[0],
+                "minutes": lon[1],
+                "seconds": lon[2],
+                "decimal": f'{round(decimal_lon, 6):.6f}',
+                "pixel": x
+            }
+        }
+    }
+    return robot_dict
+
+
 @app.get("/getrobot")
 async def get_robot(model: str):
     select_query = "SELECT * FROM robots WHERE model = %s;"
     cursor = conn.cursor()
     cursor.execute(select_query, (model,))
-    robot = cursor.fetchone()
-    if robot:
-        lon, lat = from_dd_to_dms(float(robot[4]), float(robot[3]))
-        robot_dict = {
-            "model": robot[0],
-            "status": robot[1],
-            "battery": robot[2],
-            "position": {
-                "latitude": {
-                    "degrees": lat[0],
-                    "minutes": lat[1],
-                    "seconds": lat[2],
-                    "decimal": f'{robot[3]:.6f}'
-                },
-                "longitude": {
-                    "degrees": lon[0],
-                    "minutes": lon[1],
-                    "seconds": lon[2],
-                    "decimal": f'{robot[4]:.6f}'
-                }
-            }
-        }
-        return robot_dict
+    robot_data = cursor.fetchone()
+    if robot_data:
+        return get_robot_info(robot_data)
     else:
         return {"message": "Robot not found."}
 
@@ -71,31 +80,9 @@ async def get_all_robots():
     cursor = conn.cursor()
     cursor.execute(select_query)
     robots = cursor.fetchall()
-    print(robots)
     robot_list = []
-    for robot in robots:
-        lon, lat = from_dd_to_dms(float(robot[4]), float(robot[3]))
-        robot_dict = {
-            "model": robot[0],
-            "status": robot[1],
-            "battery": robot[2],
-
-            "position": {
-                "latitude": {
-                    "degrees": lat[0],
-                    "minutes": lat[1],
-                    "seconds": lat[2],
-                    "decimal": f'{robot[3]:.6f}'
-                },
-                "longitude": {
-                    "degrees": lon[0],
-                    "minutes": lon[1],
-                    "seconds": lon[2],
-                    "decimal": f'{robot[4]:.6f}'
-                }
-            }
-        }
-        robot_list.append(robot_dict)
+    for robot_data in robots:
+        robot_list.append(get_robot_info(robot_data))
 
     return robot_list
 
@@ -137,14 +124,12 @@ async def update_status(model: str, newBattery: int):
 
 @app.delete("/deleterobot")
 async def delete_robot(model: str):
-    debug_print()
     delete_query = f"DELETE FROM robots WHERE model='{model}'"
     select_query = f"SELECT model FROM robots WHERE model='{model}'"
     cursor = conn.cursor()
     cursor.execute(select_query)
     # if model in ROBOTS:
     #     del ROBOTS[model]
-    debug_print()
     if not cursor.fetchone():
         return {"Error": "No such robot"}
     cursor.execute(delete_query)
@@ -152,8 +137,14 @@ async def delete_robot(model: str):
     cursor.close()
     return {"Success": "Robot deleted"}
 
-# @app.delete("/resetrobots")
-# async def reset_robots():
+@app.delete("/resetdatabase")
+async def reset_database():
+    delete_query = f"DELETE FROM robots"
+    cursor = conn.cursor()
+    cursor.execute(delete_query)
+    conn.commit()
+    cursor.close()
+    return {"Success": "All rows deleted"}
 
 @app.post("/addrobot")
 async def add_robot(model: str):
@@ -176,8 +167,8 @@ async def add_robot(model: str):
     
     return {"Success": "Robot added"}
 
-@app.put("/updateposition/{model}")
-async def update_position(model: str):
+@app.put("/updateposition")
+async def update_position(model: str, longitude: float, latitude: float):
     try:
         # Retrieve the robot coordinates from the database using the provided ID
         cursor = conn.cursor()
@@ -186,9 +177,7 @@ async def update_position(model: str):
         # Fetch the first row of the result
         result = cursor.fetchone()
 
-        if result is not None:
-            longitude, latitude = get_robot_location(model)
-
+        if result:
             cursor.execute(
                 "UPDATE robots SET longitude = %s, latitude = %s WHERE model = %s",
                 (longitude, latitude, model)
@@ -207,4 +196,4 @@ async def update_position(model: str):
         
 initialize_positions()
 print(ROBOTS.keys())
-print("ciao")
+debug_print()

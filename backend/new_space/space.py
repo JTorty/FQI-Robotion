@@ -12,20 +12,29 @@ max_longitude = 41.404246
 min_latitude = 2.174078
 max_latitude = 2.174198
 
-x_input_range = WIDTH - 1 
-y_input_range = HEIGHT - 1
+x_range = WIDTH - 1
+y_range = HEIGHT - 1
 
-lon_output_range = max_longitude - min_longitude
-lat_output_range = max_latitude - min_latitude
+lon_range = max_longitude - min_longitude
+lat_range = max_latitude - min_latitude
+
 
 def get_location(x, y):
-    lon = ((x-1) * lon_output_range / x_input_range) + min_longitude
-    lat = ((y-1) * lat_output_range / y_input_range) + min_latitude
+    lon = ((x-1) * lon_range / x_range) + min_longitude
+    lat = ((y-1) * lat_range / y_range) + min_latitude
     return lon, lat
+
+
+def get_pixels(lon, lat):
+    x = round(((lon - min_longitude) * x_range / lon_range) + 1)
+    y = round(((lat - min_latitude) * y_range / lat_range) + 1)
+    return x, y
+
 
 def get_robot_location(model: str):
     robot = ROBOTS[model]
     return get_location(robot.center.x, robot.center.y)
+
 
 # define planimetry boundaries
 corners = (
@@ -53,7 +62,7 @@ def initialize_positions():
 
 
 def is_position_valid(robot: Robot) -> bool:
-    
+
     if (not robot.center.within(space)) or (robot.center.distance(space.boundary) < robot.radius):
         return False
 
@@ -76,40 +85,6 @@ def is_position_valid(robot: Robot) -> bool:
     return True
 
 
-# def move_all_robots():
-#     for robot in ROBOTS.values():
-#         angles = list(range(360))
-        
-#         random.shuffle(angles)
-
-#         if not robot.direction:
-#             robot.direction = angles.pop()
-
-#         old_center = robot.center
-        
-#         while True:
-#             # try to move 1 pixel in the current direction, else pop a new angle and try again
-#             new_x = old_center.x + cos(radians(robot.direction)) 
-#             new_y = old_center.y + sin(radians(robot.direction))
-#             robot.center = Point(new_x, new_y)
-
-#             if is_position_valid(robot):
-#                 break
-            
-#             else:
-#                 try:
-#                     robot.center = old_center
-#                     robot.direction = angles.pop()
-#                 # no direction avaiable. The robot will stand still
-#                 except IndexError:
-#                     robot.center = old_center
-#                     robot.direction = None
-#                     break
-   
-#         if robot.center != old_center:
-#             robot.shape = robot.center.buffer(robot.radius, robot.radius)
-
-
 def move_robot(model: str, displacement: int):
     """moves 1 robot of an arbitrary quantity of pixels. Useful if robots have different speeds"""
     robot = ROBOTS[model]
@@ -121,7 +96,7 @@ def move_robot(model: str, displacement: int):
         robot.direction = angles.pop()
 
     old_center = robot.center
-        
+
     while True:
         # try to in the current direction, else pop a new angle and try again
         new_x = old_center.x + cos(radians(robot.direction))*displacement
@@ -130,7 +105,7 @@ def move_robot(model: str, displacement: int):
 
         if is_position_valid(robot):
             break
-            
+
         else:
             try:
                 robot.direction = angles.pop()
@@ -139,4 +114,12 @@ def move_robot(model: str, displacement: int):
                 robot.center = old_center
                 robot.direction = None
                 break
-    
+
+
+# print(get_pixels(*get_location(1, 1)))
+# print(get_pixels(*get_location(950, 600)))
+# print(get_pixels(*get_location(300, 431)))
+# print(get_pixels(*get_location(200, 431)))
+# print(get_pixels(*get_location(888, 500)))
+# print(get_pixels(*get_location(81, 359)))
+# print(get_pixels(*get_location(72, 3)))

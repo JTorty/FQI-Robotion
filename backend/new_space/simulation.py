@@ -8,56 +8,10 @@ from obstacles import obstacles
 from robots import ROBOTS
 from space import space, WIDTH, HEIGHT, initialize_positions, move_robot, get_robot_location
 
-# # how many pixels per second
-# VELOCITY = 20
-
-# def real_time_animation():
-#     moves_per_update = max(int(RATE/1000 * VELOCITY), 1)
-#     print(f'pixels per update={moves_per_update}')
-
-#     # set space parameters
-#     obstacle_color = "grey"
-
-#     # set matplot graph parameters
-#     fig = plt.figure()
-#     ax = fig.gca()
-#     ax.set_aspect('equal')
-#     ax.set_xlim(1, WIDTH)
-#     ax.set_ylim(1, HEIGHT)
-#     ax.xaxis.set_major_locator(MultipleLocator(100))
-#     ax.yaxis.set_major_locator(MultipleLocator(100))
-
-#     # define the frame update function
-#     def update(frame):
-
-#         # change the space
-#         for _ in range(moves_per_update):
-#             move_all_robots()
-
-#         ax.clear()
-#         # plot the modifies space
-#         ax.plot(*space.exterior.xy, color='k',
-#                 linewidth=0.2, linestyle='dashed')
-#         for obstacle in obstacles:
-#             ax.fill(*obstacle.exterior.xy, alpha=.8,
-#                     color=obstacle_color, linewidth=0)
-
-#         for model, robot in ROBOTS.items():
-#             ax.fill(*robot.shape.exterior.xy, color=robot.color)
-#             location = get_location(robot.center.x, robot.center.y)
-#             label = model + '\n' + \
-#                 f'x={location[0]}' + '\n' + f'y={location[1]}'
-#             ax.text(robot.center.x, robot.center.y, label, fontsize=8,
-#                     verticalalignment='center', horizontalalignment='center')
-
-#     initialize_positions()
-#     animation = FuncAnimation(fig, update, interval=RATE, frames=6000)
-#     plt.show()
-
 # update time in milliseconds
 RATE = 100
 
-def other_real_time_animation():
+def simulation():
     # set space parameters
     obstacle_color = "grey"
 
@@ -100,4 +54,4 @@ def other_real_time_animation():
     plt.show()
 
 
-other_real_time_animation()
+simulation()
