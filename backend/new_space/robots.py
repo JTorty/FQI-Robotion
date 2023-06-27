@@ -24,17 +24,18 @@ class Robot:
 
 ROBOTS: dict[str, Robot] = {}
 
-for i in range(10):
-    new_robot = Robot()
-    new_robot.color = TABLEAU_COLORS[color_keys.pop()]
-    new_robot.speed = ROBOT_SPEED
-    new_robot.battery = randint(10, 100)
-    model = f'S-{str(i).zfill(2)}'
-    ROBOTS[model] = new_robot
+
+def create_robots(i: int):
+    for i in range(i):
+        new_robot = Robot()
+        new_robot.color = TABLEAU_COLORS[color_keys.pop()]
+        new_robot.speed = ROBOT_SPEED
+        new_robot.battery = randint(10, 100)
+        model = f'S-{str(i).zfill(2)}'
+        ROBOTS[model] = new_robot
 
 
 def debug_print():
     for model, robot in ROBOTS.items():
         print(model, ":", robot)
 
-#debug_print()

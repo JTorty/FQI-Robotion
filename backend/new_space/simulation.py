@@ -5,11 +5,11 @@ from matplotlib.animation import FuncAnimation
 
 
 from obstacles import obstacles
-from robots import ROBOTS
-from space import space, WIDTH, HEIGHT, initialize_positions, move_robot, get_robot_location
+from robots import *
+from space import *
 
 # update time in milliseconds
-RATE = 100
+RATE = 500
 
 def simulation():
     # set space parameters
@@ -31,6 +31,7 @@ def simulation():
         for model, robot in ROBOTS.items():
             displacement = max(int(RATE/1000 * robot.speed), 1)
             move_robot(model, displacement)
+            debug_print()
 
         ax.clear()
         # plot the modifies space
@@ -49,6 +50,7 @@ def simulation():
             ax.text(robot.center.x, robot.center.y, label, fontsize=8,
                     verticalalignment='center', horizontalalignment='center')
 
+    create_robots(10)
     initialize_positions()
     animation = FuncAnimation(fig, update, interval=RATE, frames=6000)
     plt.show()
