@@ -6,6 +6,7 @@ from robots import ROBOTS, Robot, create_robots, debug_print
 from pprint import pprint
 
 # parameters
+
 update_frequency = 500
 sleep_time = update_frequency/1000
 n_robots = 10
