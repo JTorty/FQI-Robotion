@@ -1,4 +1,7 @@
 import './style/popup.css';
+import Stack from '@mui/material/Stack';
+import compassImg from "../assets/icons/compass.png";
+import batteryImg from "../assets/icons/battery-full.png";
 
 function Popup(props) {
     let accent = "#fff";
@@ -27,9 +30,26 @@ function Popup(props) {
 
     return (
         <div className={`popup popup_${props.position}`}
-             style={{display: props.isVisible ? 'flex' : 'none', borderColor: accent}}>
-            <div className="model" style={{backgroundColor: accent}}><span>{props.model}</span></div>
-            <div className="popup_body"></div>
+            style={{ display: props.isVisible ? 'flex' : 'none', borderColor: accent }}>
+            <div className="model" style={{ backgroundColor: accent }}><span>{props.model}</span></div>
+            <Stack className="popup_body" direction="column" spacing="1vw">
+                <div className="status popup_element">
+                    <div className="icon_status"></div>
+                    <span>operative</span>
+                </div>
+                <div className="position popup_element">
+                    <img className="icon_position" src={compassImg} alt="compass icon"></img>
+                    <div className="position_coordinates">
+                        <span>41° 24' 17.4" N</span>
+                        <span>2° 10' 26.4" E</span>
+                    </div>
+                </div>
+                <div className="battery popup_element">
+                    <img className="icon_battery" src={batteryImg} alt="battery icon"></img>
+                    <span>100%</span>
+                </div>
+            </Stack>
+
         </div>
     );
 }

@@ -49,7 +49,34 @@
 }
 
 .popup_body {
+    padding: 1vw;
     background: #fff;
-    width: 100%;
+    width: auto;
     height: 75%;
+    font-size: 1vw;
+    color: #000;
 }
+
+.popup_element {
+    display: flex;
+    gap: 0.25vw;
+    align-items: center;
+}
+
+.position_coordinates {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75vw;
+}
+
+img.icon_position {
+    width: 1.5vw;
+    height: 1.5vw;
+}
+
+img.icon_battery {
+    width: 1.5vw;
+    height: 1.5vw;
+}
+
+
