@@ -4,11 +4,9 @@ import compassImg from "../assets/icons/compass.png";
 import batteryImg from "../assets/icons/battery-full.png";
 
 function Popup(props) {
-    let accent = "#fff";
+    let accent = "#e8e8e8";
 
-    if (props.color === "white") {
-        accent = "#e8e8e8";
-    } else if (props.color === "black") {
+    if (props.color === "black") {
         accent = "#1f1f1f";
     } else if (props.color === "blue") {
         accent = "#c9dff2";

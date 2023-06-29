@@ -17,7 +17,7 @@ function Grid(props) {
                 width: `${props.width}vw`,
                 height: `${props.height}vw`,
                 position: "absolute",
-                zIndex: 90,
+                zIndex: 50,
                 overflow: "hidden"
             }}>
                 <div className="grid-container" style={{

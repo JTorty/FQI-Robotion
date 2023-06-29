@@ -49,7 +49,7 @@ function Body() {
 
       <Stack direction="column" spacing={'1.5vw'}>
         <Legend />
-        <Map src={mapImg} hasGrid={isGridChecked} hasPosition={isPositionChecked} hasStatus={isStatusChecked} hasBattery={isBatteryChecked} areRobotsVisible={{isWhiteRobotVisible, isBlackRobotVisible, isBlueRobotVisible, isBrownRobotVisible, isGreenRobotVisible, isOrangeRobotVisible, isPinkRobotVisible, isRedRobotVisible, isTurquoiseRobotVisible, isYellowRobotVisible}}/>
+        <Map src={mapImg} hasFilters={{grid: isGridChecked, status: isStatusChecked, position: isPositionChecked, battery: isBatteryChecked}} areRobotsVisible={{white: isWhiteRobotVisible, black: isBlackRobotVisible, blue: isBlueRobotVisible, brown: isBrownRobotVisible, green: isGreenRobotVisible, orange: isOrangeRobotVisible, pink: isPinkRobotVisible, red: isRedRobotVisible, turquoise: isTurquoiseRobotVisible, yellow: isYellowRobotVisible}}/>
         <Filters list={['grid', 'position', 'status', 'battery']} checkBoxes={checkBoxes}/>
       </Stack>
 
