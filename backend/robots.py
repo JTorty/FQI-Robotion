@@ -30,12 +30,12 @@ class Robot:
 ROBOTS: dict[str, Robot] = {}
 
 
-def create_robots(i: int):
+def create_robots(n: int):
     '''
     i
         Number of robots to create, for a maximum of 10
     '''
-    for i in range(i):
+    for i in range(1, n+1):
         new_robot = Robot()
         new_robot.color = TABLEAU_COLORS[color_keys.pop()] #Assign a color from TABLEAU_COLORS
         new_robot.speed = ROBOT_SPEED # Set the speed of the robot
