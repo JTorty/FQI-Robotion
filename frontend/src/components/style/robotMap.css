@@ -31,7 +31,7 @@
     font-size: 0.6vw;
 }
 
-.popup_element_icon {
+.popup_map .popup_element_icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,13 +42,13 @@
     background-position: center;
 }
 
-.popup_element_text {
+.popup_map .popup_element_text {
     width: 70%;
     font-size: 0.7vw;
     text-align: left;
 }
 
-.icon_status {
+.popup_map .icon_status {
     width: 0.7vw;
     height: 0.7vw;
     border-radius: 100%;

@@ -21,7 +21,6 @@
     display: block;
     width: 0.75vw;
     height: 0.75vw;
-    background-color: #007be6;
     position: absolute;
 }
 
@@ -61,20 +60,35 @@
     display: flex;
     gap: 0.25vw;
     align-items: center;
+    height: 33%;
 }
 
 .popup_body .position_coordinates {
     display: flex;
     flex-direction: column;
     font-size: 0.75vw;
+    text-align: left;
 }
 
-.popup_body img.icon_position {
-    width: auto;
-    height: 1.5vw;
+.popup_body .icon_status {
+    width: 0.8vw;
+    height: 0.8vw;
+    border-radius: 100%;
 }
 
-.popup_body img.icon_battery {
-    width: auto;
-    height: 1.25vw;
+.popup_body .popup_element_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    height: 85%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.popup_body .popup_element_text {
+    width: 70%;
+    font-size: 0.8vw;
+    text-align: left;
 }

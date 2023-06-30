@@ -26,25 +26,45 @@ function Popup(props) {
         accent = "#6d592e";
     }
 
+    const handleStatus = () => {
+        const status = 'operative';
+
+        if (status === 'operative') {
+            return '#31BC00';
+        } else if (status === 'idle') {
+            return '#0075CA';
+        } else if (status === 'offline') {
+            return '#7E7E7E';
+        }
+    };
+
     return (
         <div className={`popup popup_${props.position}`}
             style={{ display: props.isVisible ? 'flex' : 'none', borderColor: accent }}>
             <div className="model" style={{ backgroundColor: accent }}><span>{props.model}</span></div>
             <Stack className="popup_body" direction="column" spacing="1vw">
-                <div className="status popup_element">
-                    <div className="icon_status"></div>
-                    <span>operative</span>
-                </div>
                 <div className="position popup_element">
-                    <img className="icon_position" src={compassImg} alt="compass icon"></img>
+                    <div className="icon_position popup_element_icon"
+                        style={{ backgroundImage: `url(${compassImg})` }}></div>
                     <div className="position_coordinates">
                         <span>41° 24' 17.4" N</span>
                         <span>2° 10' 26.4" E</span>
                     </div>
                 </div>
+                <div className="status popup_element">
+                    <div className="popup_element_icon">
+                        <div className="icon_status" style={{ backgroundColor: handleStatus() }}></div>
+                    </div>
+                    <div className="popup_element_text">
+                        <span>operative</span>
+                    </div>
+                </div>
                 <div className="battery popup_element">
-                    <img className="icon_battery" src={batteryImg} alt="battery icon"></img>
-                    <span>100%</span>
+                    <div className="icon_battery popup_element_icon"
+                        style={{ backgroundImage: `url(${batteryImg})` }}></div>
+                    <div className="popup_element_text">
+                        <span>100%</span>
+                    </div>
                 </div>
             </Stack>
 
