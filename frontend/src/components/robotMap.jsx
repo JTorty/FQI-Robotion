@@ -12,6 +12,9 @@ import pinkAvatar from '../assets/avatars/map/pink_robot.png';
 import redAvatar from '../assets/avatars/map/red_robot.png';
 import turquoiseAvatar from '../assets/avatars/map/turquoise_robot.png';
 import yellowAvatar from '../assets/avatars/map/yellow_robot.png';
+import openedEyes from '../assets/avatars/map/eyes/opened_eyes.png';
+import halfOpenedEyes from '../assets/avatars/map/eyes/half_opened_eyes.png';
+import closedEyes from '../assets/avatars/map/eyes/closed_eyes.png';
 
 function RobotMap(props) {
     let avatar = whiteAvatar;
@@ -46,6 +49,16 @@ function RobotMap(props) {
         accent = "#fef601";
     }
 
+    let eyes = openedEyes;
+    let battery = 100; //da modificare prendendo i dati da backend
+
+    if (battery < 50) {
+        eyes = halfOpenedEyes;
+    }
+    if (battery === 0) {
+        eyes = closedEyes;
+    }
+
     const vwTot = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     const popupWidth = props.hasFilters.position || props.hasFilters.status || props.hasFilters.battery ? '6.6vw' : '0vw';
     const avatarWidth = '5vw';
@@ -65,7 +78,7 @@ function RobotMap(props) {
     }
 
     const handleStatus = () => {
-        const status = 'operative';
+        const status = 'operative'; //da modificare prendendo i dati da backend
 
         if (status === 'operative') {
             return '#31BC00';
@@ -82,34 +95,35 @@ function RobotMap(props) {
             display: props.isVisible ? 'flex' : 'none',
             margin: `${props.position.latitude.pixels / vwTot * 100}vw calc(${props.position.longitude.pixels / vwTot * 100}vw - ((${popupWidth} - ${avatarWidth}) / 2))`
         }}>
-            <img
-                src={avatar}
-                alt={`${props.color} avatar`}
-                className="robot-map"
-            />
-            <Stack className="popup_map" direction="column" spacing="0.25vw"
+            <div className="robot-eyes"
+                style={{ backgroundImage: `url(${eyes})`}}>
+            </div>
+            <div className="robot-avatar"
+                style={{ backgroundImage: `url(${avatar})`}}>
+            </div>
+            <Stack className="popup-map" direction="column" spacing="0.25vw"
                 sx={{ border: `0.15vw solid ${accent}`, display: props.hasFilters.position || props.hasFilters.status || props.hasFilters.battery ? 'flex' : 'none' }}>
-                <div className="position popup_element" style={{ display: props.hasFilters.position ? 'flex' : 'none', height: handleHeight() }}>
-                    <div className="icon_position popup_element_icon"
+                <div className="position popup-element" style={{ display: props.hasFilters.position ? 'flex' : 'none', height: handleHeight() }}>
+                    <div className="icon-position popup-element-icon"
                         style={{ backgroundImage: `url(${compassImg})` }}></div>
-                    <div className="position_coordinates popup_element_text">
-                        <span>41° 24' 17.4" N</span>
-                        <span>2° 10' 26.4" E</span>
+                    <div className="position-coordinates popup-element-text">
+                        <span>41° 24' 17.4" N</span> {/*prendere dati da backend*/}
+                        <span>2° 10' 26.4" E</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
-                <div className="status popup_element" style={{ display: props.hasFilters.status ? 'flex' : 'none', height: handleHeight() }}>
-                    <div className="popup_element_icon">
-                        <div className="icon_status" style={{ backgroundColor: handleStatus() }}></div>
+                <div className="status popup-element" style={{ display: props.hasFilters.status ? 'flex' : 'none', height: handleHeight() }}>
+                    <div className="popup-element-icon">
+                        <div className="icon-status" style={{ backgroundColor: handleStatus() }}></div>
                     </div>
-                    <div className="popup_element_text">
-                        <span>operative</span>
+                    <div className="popup-element-text">
+                        <span>operative</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
-                <div className="battery popup_element" style={{ display: props.hasFilters.battery ? 'flex' : 'none', height: handleHeight() }}>
-                    <div className="icon_battery popup_element_icon"
+                <div className="battery popup-element" style={{ display: props.hasFilters.battery ? 'flex' : 'none', height: handleHeight() }}>
+                    <div className="icon-battery popup-element-icon"
                         style={{ backgroundImage: `url(${batteryImg})` }}></div>
-                    <div className="popup_element_text">
-                        <span>100%</span>
+                    <div className="popup-element-text">
+                        <span>100%</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
             </Stack>

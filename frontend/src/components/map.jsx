@@ -7,6 +7,7 @@ function Map(props) {
     return (
         <div>
             <Stack alignItems="flex-start">
+                {/*prendere dati da backend per tutte le position qui sotto*/}
                 <RobotMap color="white" isVisible={props.areRobotsVisible.white} position={{ latitude: {pixels: 10}, longitude: {pixels: 10} }} hasFilters={props.hasFilters}/>
                 <RobotMap color="green" isVisible={props.areRobotsVisible.green} position={{ latitude: {pixels: 25}, longitude: {pixels: 200} }} hasFilters={props.hasFilters}/>
                 <RobotMap color="turquoise" isVisible={props.areRobotsVisible.turquoise} position={{ latitude: {pixels: 50}, longitude: {pixels: 25} }} hasFilters={props.hasFilters}/>

@@ -40,6 +40,7 @@ function Body() {
     <div className="main">
 
       <Stack spacing={'3.5vw'}>
+        {/*prendere dati da backend per i model qui sotto*/}
         <RobotProfile model="S-01" color="white" setIsWhiteRobotVisible={setIsWhiteRobotVisible}/>
         <RobotProfile model="S-02" color="green" setIsGreenRobotVisible={setIsGreenRobotVisible}/>
         <RobotProfile model="S-03" color="turquoise" setIsTurquoiseRobotVisible={setIsTurquoiseRobotVisible}/>
@@ -54,6 +55,7 @@ function Body() {
       </Stack>
 
       <Stack spacing={'3.5vw'}>
+        {/*prendere dati da backend per i model qui sotto*/}
         <RobotProfile model="S-06" color="yellow" setIsYellowRobotVisible={setIsYellowRobotVisible}/>
         <RobotProfile model="S-07" color="orange" setIsOrangeRobotVisible={setIsOrangeRobotVisible}/>
         <RobotProfile model="S-08" color="red" setIsRedRobotVisible={setIsRedRobotVisible}/>
