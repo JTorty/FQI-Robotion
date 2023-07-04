@@ -41,9 +41,9 @@ def simulation():
         for model, robot in ROBOTS.items():
             circle = robot.center.buffer(robot.radius, robot.radius)
             ax.fill(*circle.exterior.xy, color=robot.color)
-            location = get_robot_location(model)
+            location = get_pixels(robot.center.x, robot.center.y)
             label = model + '\n' + \
-                f'x={location[0]:.6f}' + '\n' + f'y={location[1]:.6f}'
+                f'x={round(robot.center.x)}' + '\n' + f'y={round(robot.center.y)}'
             ax.text(robot.center.x, robot.center.y, label, fontsize=8,
                     verticalalignment='center', horizontalalignment='center')
 

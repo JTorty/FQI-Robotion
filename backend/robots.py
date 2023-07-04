@@ -3,7 +3,7 @@ from shapely.geometry import Point, Polygon
 from random import randint
 
 # pixels
-ROBOT_RADIUS = 33
+ROBOT_RADIUS = 40
 # pixels/second
 ROBOT_SPEED = 20
 

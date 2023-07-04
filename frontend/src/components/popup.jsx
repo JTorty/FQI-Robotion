@@ -1,9 +1,63 @@
 import './style/popup.css';
 import Stack from '@mui/material/Stack';
 import compassImg from "../assets/icons/compass.png";
-import batteryImg from "../assets/icons/battery-full.png";
+import batteryEmptyRedImg from "../assets/icons/battery-empty-red.png";
+import batteryFullImg from "../assets/icons/battery-full.png";
+import batteryHighImg from "../assets/icons/battery-high.png";
+import batteryLowImg from "../assets/icons/battery-low.png";
+import batteryMediumImg from "../assets/icons/battery-medium.png";
+import { useEffect, useState } from 'react';
 
 function Popup(props) {
+
+    const [battery, setBattery] = useState(-1);
+    const [statusType, setStatusType] = useState("unknown");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+
+    useEffect(() => {
+
+        fetch(`http://127.0.0.1:8000/getrobot?model=${props.model}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.battery > -1) {
+            console.log(battery); 
+            setBattery(data.battery);
+            console.log(battery);
+            }
+
+        if (data.status) {
+            setStatusType(data.status);
+        }
+        if (data.position && data.position.latitude && data.position.longitude) {
+          setLatitude(LatCoords(data.position.latitude));
+          setLongitude(LonCoords(data.position.longitude));
+        }
+        })
+        .catch(error => {
+            console.error('Error fetching battery data:', error);
+        });
+    }, [props.model, battery]);
+
+    const LatCoords = (coordinates) => {
+        const degrees = coordinates.degrees;
+        const minutes = coordinates.minutes;
+        const seconds = coordinates.seconds.toFixed(2);
+        const direction = coordinates.direction = 'E';
+        const absDegrees = Math.abs(degrees);
+        return `${absDegrees}° ${minutes}' ${seconds}" ${direction}`;
+      };
+    
+    const LonCoords = (coordinates) => {
+        const degrees = coordinates.degrees;
+        const minutes = coordinates.minutes;
+        const seconds = coordinates.seconds.toFixed(2);
+        const direction = coordinates.direction = 'N';
+        const absDegrees = Math.abs(degrees);
+        return `${absDegrees}° ${minutes}' ${seconds}" ${direction}`;
+      };
+
+
     let accent = "#e8e8e8";
     let contrast = "#1F344C";
 
@@ -36,14 +90,29 @@ function Popup(props) {
         contrast = "#e8e8e8";
     }
 
-    const handleStatus = () => {
-        const status = 'operative'; //da modificare prendendo i dati da backend
+    let batteryImgSrc;
 
-        if (status === 'operative') {
+    if (battery !== -1) {
+      if (battery === 0 ) {
+        batteryImgSrc = batteryEmptyRedImg;
+      } else if (battery <= 25) {
+        batteryImgSrc = batteryLowImg;
+      } else if (battery <= 50) {
+        batteryImgSrc = batteryMediumImg;
+      } else if (battery <= 75) {
+        batteryImgSrc = batteryHighImg;
+      } else {
+        batteryImgSrc = batteryFullImg;
+      }
+    }   
+
+    const handleStatus = () => {
+
+        if (statusType === 'operative') {
             return '#31BC00';
-        } else if (status === 'idle') {
+        } else if (statusType === 'idle') {
             return '#0075CA';
-        } else if (status === 'offline') {
+        } else if (statusType === 'offline') {
             return '#7E7E7E';
         }
     };
@@ -60,8 +129,8 @@ function Popup(props) {
                     <div className="icon-position popup-element-icon"
                         style={{ backgroundImage: `url(${compassImg})` }}></div>
                     <div className="position-coordinates popup-element-text">
-                        <span>41° 24' 17.40" N</span> {/*prendere dati da backend*/}
-                        <span>2° 10' 26.4" E</span> {/*prendere dati da backend*/}
+                        <span>{longitude}</span> {/*prendere dati da backend*/}
+                        <span>{latitude}</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
                 <div className="status popup-element">
@@ -69,14 +138,14 @@ function Popup(props) {
                         <div className="icon-status" style={{ backgroundColor: handleStatus() }}></div>
                     </div>
                     <div className="popup-element-text">
-                        <span>operative</span> {/*prendere dati da backend*/}
+                        <span>{statusType}</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
                 <div className="battery popup-element">
                     <div className="icon-battery popup-element-icon"
-                        style={{ backgroundImage: `url(${batteryImg})` }}></div>
+                        style={{ backgroundImage: `url(${batteryImgSrc})` }}></div>
                     <div className="popup-element-text">
-                        <span>100%</span> {/*prendere dati da backend*/}
+                        <span>{battery !== null ? `${battery}%` : 'Loading...'}</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
             </Stack>
