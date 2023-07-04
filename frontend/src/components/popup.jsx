@@ -107,7 +107,6 @@ function Popup(props) {
     }   
 
     const handleStatus = () => {
-        const statusType = 'operative'; //da modificare prendendo i dati da backend
 
         if (statusType === 'operative') {
             return '#31BC00';
