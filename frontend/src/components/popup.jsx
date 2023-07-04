@@ -60,7 +60,7 @@ function Popup(props) {
                     <div className="icon-position popup-element-icon"
                         style={{ backgroundImage: `url(${compassImg})` }}></div>
                     <div className="position-coordinates popup-element-text">
-                        <span>41° 24' 17.4" N</span> {/*prendere dati da backend*/}
+                        <span>41° 24' 17.40" N</span> {/*prendere dati da backend*/}
                         <span>2° 10' 26.4" E</span> {/*prendere dati da backend*/}
                     </div>
                 </div>

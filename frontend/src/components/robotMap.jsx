@@ -59,11 +59,25 @@ function RobotMap(props) {
         eyes = closedEyes;
     }
 
-    const vwTot = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    const popupWidth = props.hasFilters.position || props.hasFilters.status || props.hasFilters.battery ? '6.6vw' : '0vw';
-    const avatarWidth = '5vw';
+    const avatarSize = props.size && props.mapSize.width ? `${props.size * props.mapSize.width / 950}px` : '65px';
+    const mapWidth = props.mapSize.width ? props.mapSize.width: 950;
+    const mapHeight = props.mapSize.height ? props.mapSize.height : 600;
 
-    const handleHeight = () => {
+    const handlePopupHeight = () => {
+        if (props.hasFilters.position && props.hasFilters.status && props.hasFilters.battery) {
+            return 'calc(1.5vw * 2.25)';
+        }
+
+        if ((props.hasFilters.position && props.hasFilters.status) ||
+            (props.hasFilters.position && props.hasFilters.battery) ||
+            (props.hasFilters.status && props.hasFilters.battery)) {
+            return 'calc(1.5vw * 1.75)';
+        }
+
+        return 'calc(1.5vw)';
+    }
+
+    const handleElHeight = () => {
         if (props.hasFilters.position && props.hasFilters.status && props.hasFilters.battery) {
             return '33%';
         }
@@ -89,21 +103,21 @@ function RobotMap(props) {
         }
     };
 
-
     return (
         <div className="robot-map" style={{
             display: props.isVisible ? 'flex' : 'none',
-            margin: `${props.position.latitude.pixels / vwTot * 100}vw calc(${props.position.longitude.pixels / vwTot * 100}vw - ((${popupWidth} - ${avatarWidth}) / 2))`
+            paddingTop: `${props.position.latitude.pixels * mapHeight / 600}px`,
+            paddingLeft: `calc(${props.position.longitude.pixels * mapWidth / 950}px + (${avatarSize} / 2))`
         }}>
             <div className="robot-eyes"
-                style={{ backgroundImage: `url(${eyes})`}}>
+                style={{ backgroundImage: `url(${eyes})`, width: `calc(${avatarSize}/2.5)`, height: `calc(${avatarSize}/5)`, marginTop: `calc(${avatarSize}/2.5)` }}>
             </div>
             <div className="robot-avatar"
-                style={{ backgroundImage: `url(${avatar})`}}>
+                style={{ backgroundImage: `url(${avatar})`, width: avatarSize, height: avatarSize }}>
             </div>
             <Stack className="popup-map" direction="column" spacing="0.25vw"
-                sx={{ border: `0.15vw solid ${accent}`, display: props.hasFilters.position || props.hasFilters.status || props.hasFilters.battery ? 'flex' : 'none' }}>
-                <div className="position popup-element" style={{ display: props.hasFilters.position ? 'flex' : 'none', height: handleHeight() }}>
+                sx={{ border: `0.15vw solid ${accent}`, display: props.hasFilters.position || props.hasFilters.status || props.hasFilters.battery ? 'flex' : 'none', marginTop: `calc(${avatarSize}/1.15)`, height: handlePopupHeight() }}>
+                <div className="position popup-element" style={{ display: props.hasFilters.position ? 'flex' : 'none', height: handleElHeight() }}>
                     <div className="icon-position popup-element-icon"
                         style={{ backgroundImage: `url(${compassImg})` }}></div>
                     <div className="position-coordinates popup-element-text">
@@ -111,7 +125,7 @@ function RobotMap(props) {
                         <span>2° 10' 26.4" E</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
-                <div className="status popup-element" style={{ display: props.hasFilters.status ? 'flex' : 'none', height: handleHeight() }}>
+                <div className="status popup-element" style={{ display: props.hasFilters.status ? 'flex' : 'none', height: handleElHeight() }}>
                     <div className="popup-element-icon">
                         <div className="icon-status" style={{ backgroundColor: handleStatus() }}></div>
                     </div>
@@ -119,7 +133,7 @@ function RobotMap(props) {
                         <span>operative</span> {/*prendere dati da backend*/}
                     </div>
                 </div>
-                <div className="battery popup-element" style={{ display: props.hasFilters.battery ? 'flex' : 'none', height: handleHeight() }}>
+                <div className="battery popup-element" style={{ display: props.hasFilters.battery ? 'flex' : 'none', height: handleElHeight() }}>
                     <div className="icon-battery popup-element-icon"
                         style={{ backgroundImage: `url(${batteryImg})` }}></div>
                     <div className="popup-element-text">
