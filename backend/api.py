@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import IntegrityError
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from space import HEIGHT
 
 
 def from_dd_to_dms(dec_lon: float, dec_lat: float) -> tuple[tuple[int, int, float], tuple[int, int, float]]:
@@ -60,7 +61,9 @@ def get_robot_info(robot_data):
                 "minutes": lat[1],
                 "seconds": lat[2],
                 "decimal": f'{round(decimal_lat, 6):.6f}',
-                "pixel": robot_data[6]
+                # swapping y axis since the back-end map starts from the lower left corner,
+                # the front end one starts from the upper left corner
+                "pixel": HEIGHT - robot_data[6]
             },
         }
     }

@@ -3,7 +3,7 @@
     The overhead was so big that 10 robots updates done at the same times would propagate their results into the database in 5/10 seconds.
 
     We didn’t have enough time to improve the processing time so we used a workaround.
-    The BE main.py doesn’t’ call any HTTP method to update the positions, instead they communicate with the database and make a direct SQL query
+    The BE main.py doesn’t call any HTTP method to update the positions, instead they communicate with the database and make a direct SQL query
 
     The GET method doesn’t have any overhead, so the FE can use it to retrieve data whenever it needs to. 
 
