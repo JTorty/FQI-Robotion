@@ -9,35 +9,39 @@ import batteryMediumImg from "../assets/icons/battery-medium.png";
 import { useEffect, useState } from 'react';
 
 function Popup(props) {
+    
+  const [battery, setBattery] = useState(-1);
+  const [statusType, setStatusType] = useState("unknown");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
 
-    const [battery, setBattery] = useState(-1);
-    const [statusType, setStatusType] = useState("unknown");
-    const [latitude, setLatitude] = useState("");
-    const [longitude, setLongitude] = useState("");
-
-    useEffect(() => {
-
-        fetch(`http://127.0.0.1:8000/getrobot?model=${props.model}`)
+  useEffect(() => {
+    const fetchData = () => {
+      fetch(`http://127.0.0.1:8000/getrobot?model=${props.model}`)
         .then(response => response.json())
         .then(data => {
-            if (data.battery > -1) {
-            console.log(battery); 
+          if (data.battery > -1) {
             setBattery(data.battery);
-            console.log(battery);
-            }
-
-        if (data.status) {
+          }
+          if (data.status) {
             setStatusType(data.status);
-        }
-        if (data.position && data.position.latitude && data.position.longitude) {
-          setLatitude(LatCoords(data.position.latitude));
-          setLongitude(LonCoords(data.position.longitude));
-        }
+          }
+          if (data.position && data.position.latitude && data.position.longitude) {
+            setLatitude(LatCoords(data.position.latitude));
+            setLongitude(LonCoords(data.position.longitude));
+          }
         })
         .catch(error => {
-            console.error('Error fetching battery data:', error);
+          console.error('Error fetching battery data:', error);
         });
-    }, [props.model, battery]);
+    };
+
+    const intervalId = setInterval(fetchData, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [props.model]);
 
     const LatCoords = (coordinates) => {
         const degrees = coordinates.degrees;
@@ -129,8 +133,8 @@ function Popup(props) {
                     <div className="icon-position popup-element-icon"
                         style={{ backgroundImage: `url(${compassImg})` }}></div>
                     <div className="position-coordinates popup-element-text">
-                        <span>{longitude}</span> {/*prendere dati da backend*/}
-                        <span>{latitude}</span> {/*prendere dati da backend*/}
+                        <span>{longitude}</span>
+                        <span>{latitude}</span>
                     </div>
                 </div>
                 <div className="status popup-element">
@@ -138,14 +142,14 @@ function Popup(props) {
                         <div className="icon-status" style={{ backgroundColor: handleStatus() }}></div>
                     </div>
                     <div className="popup-element-text">
-                        <span>{statusType}</span> {/*prendere dati da backend*/}
+                        <span>{statusType}</span>
                     </div>
                 </div>
                 <div className="battery popup-element">
                     <div className="icon-battery popup-element-icon"
                         style={{ backgroundImage: `url(${batteryImgSrc})` }}></div>
                     <div className="popup-element-text">
-                        <span>{battery !== null ? `${battery}%` : 'Loading...'}</span> {/*prendere dati da backend*/}
+                        <span>{battery !== null ? `${battery}%` : 'Loading...'}</span>
                     </div>
                 </div>
             </Stack>
