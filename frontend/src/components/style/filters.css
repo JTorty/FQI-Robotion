@@ -17,3 +17,7 @@
     border-radius: 1vw;
     position: absolute;
 }
+
+#filters-list svg {
+    font-size: 1.25vw;
+}
