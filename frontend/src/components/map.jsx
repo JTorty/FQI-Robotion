@@ -12,7 +12,7 @@ function Map(props) {
             const {offsetWidth: width, offsetHeight: height} = mapEl.current;
             setMapSize({width, height});
         }
-    }, [mapEl]);
+    }, [mapEl, mapSize]);
 
   const [robotPositions, setRobotPositions] = useState({
     white: { latitude: { pixels: 1 }, longitude: { pixels: 1 } },
@@ -126,16 +126,16 @@ function Map(props) {
     return (
         <div>
             <Stack alignItems="flex-start">
-                <RobotMap color="white" isVisible={props.areRobotsVisible.white} size={65} mapSize={mapSize} position={robotPositions.white} hasFilters={props.hasFilters}/>
-                <RobotMap color="green" isVisible={props.areRobotsVisible.green} size={65} mapSize={mapSize} position={robotPositions.green} hasFilters={props.hasFilters}/>
-                <RobotMap color="turquoise" isVisible={props.areRobotsVisible.turquoise} size={65} mapSize={mapSize} position={robotPositions.turquoise} hasFilters={props.hasFilters}/>
-                <RobotMap color="black" isVisible={props.areRobotsVisible.black} size={65} mapSize={mapSize} position={robotPositions.black} hasFilters={props.hasFilters}/>
-                <RobotMap color="brown" isVisible={props.areRobotsVisible.brown} size={65} mapSize={mapSize} position={robotPositions.brown} hasFilters={props.hasFilters}/>
-                <RobotMap color="yellow" isVisible={props.areRobotsVisible.yellow} size={65} mapSize={mapSize} position={robotPositions.yellow} hasFilters={props.hasFilters}/>
-                <RobotMap color="orange" isVisible={props.areRobotsVisible.orange} size={65} mapSize={mapSize} position={robotPositions.orange} hasFilters={props.hasFilters}/>
-                <RobotMap color="red" isVisible={props.areRobotsVisible.red} size={65} mapSize={mapSize} position={robotPositions.red} hasFilters={props.hasFilters}/>
-                <RobotMap color="pink" isVisible={props.areRobotsVisible.pink} size={65} mapSize={mapSize} position={robotPositions.pink} hasFilters={props.hasFilters}/>
-                <RobotMap color="blue" isVisible={props.areRobotsVisible.blue} size={65} mapSize={mapSize} position={robotPositions.blue} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-01" color="white" isVisible={props.areRobotsVisible.white} size={65} mapSize={mapSize} position={robotPositions.white} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-02" color="green" isVisible={props.areRobotsVisible.green} size={65} mapSize={mapSize} position={robotPositions.green} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-03" color="turquoise" isVisible={props.areRobotsVisible.turquoise} size={65} mapSize={mapSize} position={robotPositions.turquoise} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-04" color="black" isVisible={props.areRobotsVisible.black} size={65} mapSize={mapSize} position={robotPositions.black} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-05" color="brown" isVisible={props.areRobotsVisible.brown} size={65} mapSize={mapSize} position={robotPositions.brown} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-06" color="yellow" isVisible={props.areRobotsVisible.yellow} size={65} mapSize={mapSize} position={robotPositions.yellow} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-07" color="orange" isVisible={props.areRobotsVisible.orange} size={65} mapSize={mapSize} position={robotPositions.orange} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-08" color="red" isVisible={props.areRobotsVisible.red} size={65} mapSize={mapSize} position={robotPositions.red} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-09" color="pink" isVisible={props.areRobotsVisible.pink} size={65} mapSize={mapSize} position={robotPositions.pink} hasFilters={props.hasFilters}/>
+                <RobotMap model="S-10"color="blue" isVisible={props.areRobotsVisible.blue} size={65} mapSize={mapSize} position={robotPositions.blue} hasFilters={props.hasFilters}/>
             </Stack>
             {props.hasFilters.grid &&
             <Grid width={60} height={38} rows={10} columns={14} cellSize={4.3} margin={{x: 0, y: -1.7}} hasCoordinates={true} scale={0.05} startingLat={26.65} startingLon={14.6} offsetLat={1} offsetLon={1} fontSize="0.8vw"/>

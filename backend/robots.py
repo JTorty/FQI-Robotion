@@ -1,5 +1,5 @@
 from matplotlib.colors import TABLEAU_COLORS
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point
 from random import randint
 
 # pixels
