@@ -75,5 +75,6 @@ while True:
     sleep(sleep_time)
 
     for model, robot in ROBOTS.items():
-        move_robot(model, max(robot.speed * sleep_time, 1))
+        if robot.status == "operative":            
+            move_robot(model, max(robot.speed * sleep_time, 1))
     update_database()

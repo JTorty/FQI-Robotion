@@ -1,6 +1,6 @@
 from matplotlib.colors import TABLEAU_COLORS
 from shapely.geometry import Point
-from random import randint
+from random import randint, sample
 
 # pixels
 ROBOT_RADIUS = 35
@@ -35,13 +35,20 @@ def create_robots(n: int):
     i
         Number of robots to create, for a maximum of 10
     '''
-    for i in range(1, n+1):
+    n_range = range(1, n+1)
+    idle_robot, offline_robot = sample(n_range, 2)
+    for i in n_range:
         new_robot = Robot()
         new_robot.color = TABLEAU_COLORS[color_keys.pop()] #Assign a color from TABLEAU_COLORS
         new_robot.speed = ROBOT_SPEED # Set the speed of the robot
         new_robot.battery = randint(10, 100) # Set a random battery level
         model = f'S-{str(i).zfill(2)}' # Generate a model string
         ROBOTS[model] = new_robot # Add the robot to the ROBOTS dictionary
+        if i == idle_robot:
+            ROBOTS[model].status = "idle"
+        if i == offline_robot:
+            ROBOTS[model].status = "offline"
+            ROBOTS[model].battery = 0
 
 
 def debug_print():
