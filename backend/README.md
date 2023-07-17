@@ -22,7 +22,7 @@
     4.	Restore the database “database/database_robotion.sql”
     5.	$python main.py
 
-
+**Database info**
 Database name:
     Robotion
 Table name:
