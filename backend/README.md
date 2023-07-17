@@ -21,3 +21,17 @@
     3.	$uvicorn api:app-reload
     4.	Restore the database “database/database_robotion.sql”
     5.	$python main.py
+
+
+Database name:
+    Robotion
+Table name:
+    robots
+Column/Type:
+    model/text  [PK]
+    status/text
+    battery/integer
+    logitude/numeric
+    latitude/numeric
+    x_pixel/integer
+    y_pixel/integer
